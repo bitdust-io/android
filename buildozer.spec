@@ -7,7 +7,7 @@ title = BitDust
 package.name = bitdust
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = com.bitdust_io.bitdust
+package.domain = org.bitdust_io.bitdust
 
 # (str) Source code where the main.py live
 source.dir = ./src/
@@ -36,18 +36,14 @@ version = 1.0.1
 # version.filename = %(source.dir)s/main.py
 
 
-
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = kivy==master, twisted
+requirements = kivy, twisted
 
 # setuptools, flask, pyasn1, pycrypto, pyOpenSSL, pyparsing
 # appdirs, CodernityDB, cryptography, service_identity
 # freetype, freetype-py, twisted, python-dev, python-setuptools, python-pip, python-virtualenv,
 # python-twisted, python-django, python-crypto, python-pyasn1, python-psutil, libffi-dev, libssl-dev
-
-
-
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -63,7 +59,7 @@ requirements = kivy==master, twisted
 #icon.filename = %(source.dir)s/data/icon.png
 
 # (str) Supported orientation (one of landscape, portrait or all)
-orientation = portrait
+orientation = landscape
 
 # (list) List of service to declare
 #services = NAME:ENTRYPOINT_TO_PY,NAME2:ENTRYPOINT2_TO_PY
@@ -75,25 +71,12 @@ orientation = portrait
 #
 # author = © Copyright Info
 
-# change the major version of python used by the app
-osx.python_version = 2
-
-# Kivy version to use
-osx.kivy_version = 1.9.1
-
 #
 # Android specific
 #
 
 # (bool) Indicate if the application should be fullscreen or not
 fullscreen = 0
-
-# (string) Presplash background color (for new android toolchain)
-# Supported formats are: #RRGGBB #AARRGGBB or one of the following names:
-# red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
-# darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
-# olive, purple, silver, teal.
-#android.presplash_color = #FFFFFF
 
 # (list) Permissions
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
@@ -110,34 +93,35 @@ android.sdk = 27
 # (str) Android NDK version to use
 android.ndk = 10e
 
+android.arch = armeabi-v7a
+
+p4a.bootstrap = sdl2
+
 # (bool) Use --private data storage (True) or --dir public storage (False)
 android.private_storage = True
 
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
-android.ndk_path = /Users/veselin/ndk/
+android.ndk_path = /home/kivy/ndk
 
 # (str) Android SDK directory (if empty, it will be automatically downloaded.)
-android.sdk_path = /Users/veselin/sdk/
+android.sdk_path = /home/kivy/sdk
 
 # (str) ANT directory (if empty, it will be automatically downloaded.)
 #android.ant_path =
 
-# (bool) If True, then skip trying to update the Android sdk
+# (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
+#android.p4a_dir =
+
+# (list) python-for-android whitelist
+#android.p4a_whitelist =
+
+# (bool) If True, t	hen skip trying to update the Android sdk
 # This can be useful to avoid excess Internet downloads or save time
 # when an update is due and you just want to test/build your package
 # android.skip_update = False
 
 # (str) Android entry point, default is ok for Kivy-based app
 #android.entrypoint = org.renpy.android.PythonActivity
-
-# (list) Pattern to whitelist for the whole project
-#android.whitelist =
-
-# (str) Path to a custom whitelist file
-#android.whitelist_src =
-
-# (str) Path to a custom blacklist file
-#android.blacklist_src =
 
 # (list) List of Java .jar files to add to the libs so that pyjnius can access
 # their classes. Don't add jars that you do not need, since extra jars can slow
@@ -149,16 +133,9 @@ android.sdk_path = /Users/veselin/sdk/
 # directory containing the files)
 #android.add_src =
 
-# (list) Android AAR archives to add (currently works only with sdl2_gradle
-# bootstrap)
-#android.add_aars =
-
-# (list) Gradle dependencies to add (currently works only with sdl2_gradle
-# bootstrap)
-#android.gradle_dependencies =
-
-# (str) python-for-android branch to use, defaults to stable
-#p4a.branch = stable
+# (str) python-for-android branch to use, if not master, useful to try
+# not yet merged features.
+#android.branch = master
 
 # (str) OUYA Console category. Should be one of GAME or APP
 # If you leave this blank, OUYA support will not be enabled
@@ -191,29 +168,7 @@ android.sdk_path = /Users/veselin/sdk/
 #android.logcat_filters = *:S python:D
 
 # (bool) Copy library instead of making a libpymodules.so
-android.copy_libs = 1
-
-# (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86
-android.arch = armeabi-v7a
-
-#
-# Python for android (p4a) specific
-#
-
-# (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
-# p4a.source_dir = /Users/veselin/Library/Python/2.7/lib/python/site-packages/pythonforandroid/
-
-# (str) The directory in which python-for-android should look for your own build recipes (if any)
-#p4a.local_recipes =
-
-# (str) Filename to the hook for p4a
-# p4a.hook = /Users/veselin/Library/Python/2.7/bin/p4a
-
-# (str) Bootstrap to use for android builds
-p4a.bootstrap = sdl2
-# webview
-# sdl2
-
+#android.copy_libs = 1
 
 #
 # iOS specific
@@ -239,10 +194,10 @@ log_level = 2
 warn_on_root = 1
 
 # (str) Path to build artifact storage, absolute or relative to spec file
-# build_dir = ./build
+# build_dir = ./.buildozer
 
 # (str) Path to build output (i.e. .apk, .ipa) storage
-bin_dir = ./bin
+# bin_dir = ./bin
 
 #    -----------------------------------------------------------------------------
 #    List as sections
