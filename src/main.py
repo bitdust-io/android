@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 import os
+import sys
+import time
 
 import kivy
 kivy.require('1.10.1')  # replace with your current kivy version !
@@ -16,14 +18,38 @@ from kivy.app import App
 from kivy.uix.label import Label
 
 
-def start_bitdust():
-    executable_path = os.getcwd()
-    try:
-        os.chdir(os.path.dirname(__file__))
-    except:
-        pass
-    from main.bpmain import main
-    main(executable_path=executable_path, start_reactor=False)
+class BitDustService(App):
+
+    def build(self):
+        print('LAUNCHING BitDustService')
+        self.start_service()
+
+    def start_service(self):
+        self.service = None
+
+        if sys.platform == 'android' or sys.platform == 'linux3':
+            from android import AndroidService
+            service = AndroidService('Twisted2Webserver', 'running')  
+            # this will launch what is in the folder service/main.py as a service
+            service.start('Twisted2Webserver service started')
+            self.service = service
+
+        else:
+            executable_path = os.getcwd()
+            try:
+                os.chdir('./src/bitdust')
+            except:
+                pass
+            from bitdust.main.bpmain import main
+            main(executable_path='./src/bitdust', start_reactor=False)
+
+    def stop_service(self):
+        if self.service:
+            self.service.stop()
+            self.service = None
+
+    def on_stop(self):  # TODO: does not work! We need to close the service on leaving!
+        self.stop_service()
 
 
 class TwistedServerApp(App):
@@ -31,7 +57,6 @@ class TwistedServerApp(App):
     label = None
 
     def build(self):
-        start_bitdust()
         self.label = Label(text="server started\n")
         return self.label
 
@@ -48,4 +73,13 @@ class TwistedServerApp(App):
 
 
 if __name__ == '__main__':
+    bitdust_server = BitDustService()
+    bitdust_server.build()
+    #bitdust_server.run()
+    time.sleep(0.1)
+    bitdust_server.stop_service()  # workaround because service might still be running on exit
+    time.sleep(0.5)
+    bitdust_server.start_service()
+    time.sleep(0.1)
+
     TwistedServerApp().run()

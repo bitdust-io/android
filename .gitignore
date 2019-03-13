@@ -9,4 +9,5 @@
 .tmp/
 bin/
 venv/
+src/bitdust/
 
