@@ -35,10 +35,9 @@ version = 1.0.1
 # version.regex = __version__ = ['"](.*)['"]
 # version.filename = %(source.dir)s/main.py
 
-
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = kivy, twisted
+requirements = kivy, twisted==18.7.0, service_identity, pycryptodomex, pyparsing, appdirs, cffi, six
 
 # setuptools, flask, pyasn1, pycrypto, pyOpenSSL, pyparsing
 # appdirs, CodernityDB, cryptography, service_identity
@@ -67,6 +66,11 @@ orientation = landscape
 #
 # OSX Specific
 #
+
+osx.python_version = 2
+
+osx.kivy_version = 1.10.1
+
 
 #
 # author = © Copyright Info
