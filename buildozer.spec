@@ -7,13 +7,12 @@ title = BitDust
 package.name = bitdust
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.bitdust_io.bitdust
+package.domain = org.kivy
 
 # (str) Source code where the main.py live
-source.dir = ./src/
+source.dir = src
 
 # (list) Source files to include (let empty to include all the files)
-# source.include_exts = py,png,jpg,kv,atlas
 source.include_exts = py,png,jpg,kv,atlas,ttf,sh
 
 # (list) List of inclusions using pattern matching
@@ -29,20 +28,16 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,sh
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 1.0.1
+version.regex = __version__ = '(.*)'
+version.filename = %(source.dir)s/main.py
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
 # version.filename = %(source.dir)s/main.py
 
 # (list) Application requirements
-# comma seperated e.g. requirements = sqlite3,kivy
-requirements = kivy, twisted==18.7.0, service_identity, pycryptodomex, pyparsing, appdirs, cffi, six
-
-# setuptools, flask, pyasn1, pycrypto, pyOpenSSL, pyparsing
-# appdirs, CodernityDB, cryptography, service_identity
-# freetype, freetype-py, twisted, python-dev, python-setuptools, python-pip, python-virtualenv,
-# python-twisted, python-django, python-crypto, python-pyasn1, python-psutil, libffi-dev, libssl-dev
+# comma separated e.g. requirements = sqlite3,kivy
+requirements = python3,kivy,oscpy,twisted==18.7.0,service_identity,pycryptodomex,pyparsing,appdirs,cffi,six
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -57,23 +52,24 @@ requirements = kivy, twisted==18.7.0, service_identity, pycryptodomex, pyparsing
 # (str) Icon of the application
 #icon.filename = %(source.dir)s/data/icon.png
 
-# (str) Supported orientation (one of landscape, portrait or all)
-orientation = landscape
+# (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
+orientation = all
 
 # (list) List of service to declare
-#services = NAME:ENTRYPOINT_TO_PY,NAME2:ENTRYPOINT2_TO_PY
+services = Pong:service.py
 
 #
 # OSX Specific
 #
 
-osx.python_version = 2
-
-osx.kivy_version = 1.10.1
-
-
 #
 # author = © Copyright Info
+
+# change the major version of python used by the app
+osx.python_version = 3
+
+# Kivy version to use
+osx.kivy_version = 1.9.1
 
 #
 # Android specific
@@ -82,50 +78,59 @@ osx.kivy_version = 1.10.1
 # (bool) Indicate if the application should be fullscreen or not
 fullscreen = 0
 
+# (string) Presplash background color (for new android toolchain)
+# Supported formats are: #RRGGBB #AARRGGBB or one of the following names:
+# red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
+# darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
+# olive, purple, silver, teal.
+#android.presplash_color = #FFFFFF
+
 # (list) Permissions
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
 
 # (int) Android API to use
-android.api = 21
+android.api = 26
 
-# (int) Minimum API required
+# (int) Minimum API required. You will need to set the android.ndk.api to be as low as this value.
 android.minapi = 21
 
 # (int) Android SDK version to use
-android.sdk = 27
+android.sdk = 21
 
 # (str) Android NDK version to use
-android.ndk = 10e
+android.ndk = 17c
 
-android.arch = armeabi-v7a
-
-p4a.bootstrap = sdl2
+# (int) Android NDK API to use (optional). This is the minimum API your app will support. 
+android.ndk_api = 21
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
-android.private_storage = True
+#android.private_storage = True
 
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
-android.ndk_path = /home/kivy/ndk
+#android.ndk_path =
 
 # (str) Android SDK directory (if empty, it will be automatically downloaded.)
-android.sdk_path = /home/kivy/sdk
+#android.sdk_path =
 
 # (str) ANT directory (if empty, it will be automatically downloaded.)
 #android.ant_path =
 
-# (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
-#android.p4a_dir =
-
-# (list) python-for-android whitelist
-#android.p4a_whitelist =
-
-# (bool) If True, t	hen skip trying to update the Android sdk
+# (bool) If True, then skip trying to update the Android sdk
 # This can be useful to avoid excess Internet downloads or save time
 # when an update is due and you just want to test/build your package
 # android.skip_update = False
 
 # (str) Android entry point, default is ok for Kivy-based app
 #android.entrypoint = org.renpy.android.PythonActivity
+
+# (list) Pattern to whitelist for the whole project
+#android.whitelist =
+
+# (str) Path to a custom whitelist file
+#android.whitelist_src =
+
+# (str) Path to a custom blacklist file
+#android.blacklist_src =
 
 # (list) List of Java .jar files to add to the libs so that pyjnius can access
 # their classes. Don't add jars that you do not need, since extra jars can slow
@@ -137,9 +142,19 @@ android.sdk_path = /home/kivy/sdk
 # directory containing the files)
 #android.add_src =
 
-# (str) python-for-android branch to use, if not master, useful to try
-# not yet merged features.
-#android.branch = master
+# (list) Android AAR archives to add (currently works only with sdl2_gradle
+# bootstrap)
+#android.add_aars =
+
+# (list) Gradle dependencies to add (currently works only with sdl2_gradle
+# bootstrap)
+#android.gradle_dependencies =
+
+# (list) Java classes to add as activities to the manifest.
+#android.add_activites = com.example.ExampleActivity
+
+# (str) python-for-android branch to use, defaults to stable
+#p4a.branch = stable
 
 # (str) OUYA Console category. Should be one of GAME or APP
 # If you leave this blank, OUYA support will not be enabled
@@ -151,7 +166,10 @@ android.sdk_path = /home/kivy/sdk
 # (str) XML file to include as an intent filters in <activity> tag
 #android.manifest.intent_filters =
 
-# (list) Android additionnal libraries to copy into libs/armeabi
+# (str) launchMode to set for the main activity
+#android.manifest.launch_mode = standard
+
+# (list) Android additional libraries to copy into libs/armeabi
 #android.add_libs_armeabi = libs/android/*.so
 #android.add_libs_armeabi_v7a = libs/android-v7/*.so
 #android.add_libs_x86 = libs/android-x86/*.so
@@ -173,6 +191,29 @@ android.sdk_path = /home/kivy/sdk
 
 # (bool) Copy library instead of making a libpymodules.so
 #android.copy_libs = 1
+
+# (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86
+android.arch = armeabi-v7a
+
+#
+# Python for android (p4a) specific
+#
+
+# (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
+#p4a.source_dir =
+
+# (str) The directory in which python-for-android should look for your own build recipes (if any)
+#p4a.local_recipes =
+
+# (str) Filename to the hook for p4a
+#p4a.hook =
+
+# (str) Bootstrap to use for android builds
+# p4a.bootstrap = sdl2
+
+# (int) port number to specify an explicit --port= p4a argument (eg for bootstrap flask)
+#p4a.port =
+
 
 #
 # iOS specific

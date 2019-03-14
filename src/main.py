@@ -29,9 +29,9 @@ class BitDustService(App):
 
         if sys.platform == 'android' or sys.platform == 'linux3':
             from android import AndroidService
-            service = AndroidService('Twisted2Webserver', 'running')  
+            service = AndroidService('BitDustServerApp', 'running')  
             # this will launch what is in the folder service/main.py as a service
-            service.start('Twisted2Webserver service started')
+            service.start('BitDustServerApp service started')
             self.service = service
 
         else:
