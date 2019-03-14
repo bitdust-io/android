@@ -1,10 +1,12 @@
-from __future__ import absolute_import
+#!/usr/bin/env python2
+# -*- coding: UTF-8 -*-
 
-__version__ = '0.1'
+__version__ = '0.4'
 
 import os
 import sys
 import time
+import platform
 
 import kivy
 kivy.require('1.10.1')  # replace with your current kivy version !
@@ -21,68 +23,33 @@ from kivy.app import App
 from kivy.uix.label import Label
 
 
-class BitDustService(App):
-
+class AndroidServerApp(App):
+    
     def build(self):
-        print('LAUNCHING BitDustService')
-        self.start_service()
-
-    def start_service(self):
-        self.service = None
-
-        if sys.platform == 'android' or sys.platform == 'linux3':
-            from android import AndroidService
-            service = AndroidService('BitDustServerApp', 'running')  
-            # this will launch what is in the folder service/main.py as a service
-            service.start('BitDustServerApp service started')
-            self.service = service
-
-        else:
-            executable_path = os.getcwd()
-            try:
-                os.chdir('./src/bitdust')
-            except:
-                pass
-            from bitdust.main.bpmain import main
-            main(executable_path='./src/bitdust', start_reactor=False)
-
-    def stop_service(self):
-        if self.service:
-            self.service.stop()
-            self.service = None
-
-    def on_stop(self):  # TODO: does not work! We need to close the service on leaving!
-        self.stop_service()
-
-
-class TwistedServerApp(App):
-
-    label = None
-
-    def build(self):
+        print('AndroidServerApp.build')
         self.label = Label(text="server started\n")
         return self.label
 
-    def handle_message(self, msg):
-        msg = msg.decode('utf-8')
-        self.label.text = "received:  {}\n".format(msg)
+    def on_start(self):
+        # /data/user/0/org.kivy.bitdust/files/app/
+        print('AndroidServerApp.on_start %s' % platform.uname()[0])
 
-        if msg == "ping":
-            msg = "Pong"
-        if msg == "plop":
-            msg = "Kivy Rocks!!!"
-        self.label.text += "responded: {}\n".format(msg)
-        return msg.encode('utf-8')
+        sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(__file__)), 'bitdust'))
+
+        print('\n'.join(sys.path))
+
+        from main.bpmain import main
+
+        ret = main(executable_path='.', start_reactor=False)
 
 
-if __name__ == '__main__':
-    bitdust_server = BitDustService()
-    bitdust_server.build()
-    #bitdust_server.run()
-    time.sleep(0.1)
-    bitdust_server.stop_service()  # workaround because service might still be running on exit
-    time.sleep(0.5)
-    bitdust_server.start_service()
-    time.sleep(0.1)
+    def do_quit(self):
+        print("AndroidServerApp.do_quit")
+        # Kivy
+        AndroidServerApp.get_running_app().stop()
+        # Extinction de tout
+        os._exit(0)
 
-    TwistedServerApp().run()
+
+if __name__ == "__main__":
+    AndroidServerApp().run()
