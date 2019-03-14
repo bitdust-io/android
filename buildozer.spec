@@ -60,7 +60,7 @@ requirements = incremental,python3,kivy,oscpy,twisted,service_identity,pycryptod
 orientation = all
 
 # (list) List of service to declare
-services = Pong:service.py
+# services = Pong:service.py
 
 #
 # OSX Specific
