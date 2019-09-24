@@ -4,7 +4,7 @@ SRC="./.bitdust/src"
 VENV="./.bitdust/venv_deploy"
 VENVSRC="./.bitdust/venv_src"
 
-PYTHONINTERPRETATOR="python"
+PYTHONINTERPRETATOR="python3"
 
 POSITIONAL=()
 while [[ $# -gt 0 ]]
@@ -32,17 +32,16 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 
 if [[ "$COMMAND" == "deploy" ]]; then
-    rm -rf "$VENVSRC"
-    rm -rf "$VENV"
+    rm -rvf "$VENVSRC"
+    rm -rvf "$VENV"
     # if [[ ! -d "$VENV" ]]; then
-    $PYTHONINTERPRETATOR -c "import sys; print 'Global sys.path is: ', '\n    '.join(sys.path)"
+    $PYTHONINTERPRETATOR -c "import sys; print('Global sys.path is: ', '\n    '.join(sys.path))"
     git clone --depth=1 https://github.com/pypa/virtualenv.git $VENVSRC
     $PYTHONINTERPRETATOR $VENVSRC/virtualenv.py -v -p python2.7 $VENV
     # virtualenv -p python2.7 $VENV
     $VENV/bin/pip install -U pip
-    $VENV/bin/pip install pyasn1 pycrypto pyOpenSSL pyparsing appdirs ctypes
-    $VENV/bin/pip install cryptography service_identity psutil enum34 ipaddress cffi pkgversion
-    $VENV/bin/pip install twisted
+    $VENV/bin/pip install pycryptodomex service_identity pyparsing appdirs psutil cffi six
+    $VENV/bin/pip install twisted==18.7.0
     $VENV/bin/python -c "import sys; print 'BitDust virtualenv sys.path is: ', '\n    '.join(sys.path)"
     # fi
 fi

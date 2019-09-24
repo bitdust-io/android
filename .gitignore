@@ -1,0 +1,12 @@
+*.pyc
+*/*.pyc
+*.pyo
+*/*.pyo
+*.pyd
+*/*.pyd
+.DS_Store
+.buildozer/
+.tmp/
+bin/
+venv/
+src/bitdust/
