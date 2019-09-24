@@ -32,7 +32,7 @@ class AndroidServerApp(App):
 
     def on_start(self):
         # /data/user/0/org.kivy.bitdust/files/app/
-        print('AndroidServerApp.on_start %s' % platform.uname()[0])
+        print('AndroidServerApp.on_start %s' % list(platform.uname()))
 
         sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(__file__)), 'bitdust'))
 
