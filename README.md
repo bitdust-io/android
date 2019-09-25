@@ -1,9 +1,9 @@
 # BitDust for Android
 
-Tested on clean Ubuntu 18.04 Desktop.
+Tested on Ubuntu 18.04 Desktop and Mac OS Mojave (still failed).
 
 
-## Install debian packages
+#### Ubuntu dependencies
 
         sudo apt-get update
         sudo apt-get upgrade
@@ -15,38 +15,36 @@ Tested on clean Ubuntu 18.04 Desktop.
         sudo apt-get install libusb-1.0-0-dev libudev-dev
         sudo apt-get install protobuf-compiler
 
-
-## Install cython
-
         sudo pip3 install cython
 
 
-## Install buildozer
+#### MacOS dependencies
 
-        git clone https://github.com/kivy/buildozer
-        cd buildozer/
-        python setup.py build
-        sudo pip3 install -e .
-        cd ..
-
-
-## Prepare project files
-
-        mkdir android
-        cd android
-        cp ../buildozer.spec .
+        brew install git gcc make
+        sudo /usr/local/bin/python3 -m pip install Cython
+        export PATH="$PATH:/Library/Frameworks/Python.framework/Versions/3.7/bin"
+        sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
+        # still issues with zlib in python 3.7
 
 
-# Manual patches
+#### Install buildozer
 
-        nano .buildozer/android/platform/python-for-android/pythonforandroid/recipes/twisted/__init__.py
-        # comment out line:
-        # patches = ['incremental.patch']
+        make install_buildozer
 
 
-## Build APK
+#### Clone BitDust sources
 
-        buildozer -v android debug deploy run
+        make clone
+
+
+#### Make sure to start from clean state
+
+        make clean
+
+
+#### Build APK
+
+        make
 
 
 ## Connect and run on Android device

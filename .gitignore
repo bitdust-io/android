@@ -10,3 +10,5 @@
 bin/
 venv/
 src/bitdust/
+buildozer/
+python-for-android/
