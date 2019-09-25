@@ -37,8 +37,6 @@ version = 1.0.1
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
 requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptodome,twisted==19.7.0,python3
-# requirements = incremental,kivy  # first run
-# twisted=19.7.0
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -90,13 +88,13 @@ fullscreen = 0
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
 
 # (int) Target Android API, should be as high as possible.
-# android.api = 28
+# android.api = 27
 
 # (int) Minimum API your APK will support.
 # android.minapi = 21
 
 # (int) Android SDK version to use
-#android.sdk = 20
+# android.sdk = 20
 
 # (str) Android NDK version to use
 # android.ndk = 17c
@@ -125,7 +123,7 @@ android.private_storage = True
 # agreements. This is intended for automation only. If set to False,
 # the default, you will be shown the license when first running
 # buildozer.
-# android.accept_sdk_license = False
+android.accept_sdk_license = True
 
 # (str) Android entry point, default is ok for Kivy-based app
 #android.entrypoint = org.renpy.android.PythonActivity
@@ -211,13 +209,15 @@ android.arch = armeabi-v7a
 #p4a.fork = kivy
 
 # (str) python-for-android branch to use, defaults to master
-p4a.branch = master
+p4a.branch = develop
+# master
+# v2019.08.09
 
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
-#p4a.source_dir =
+# p4a.source_dir = ./python-for-android/
 
 # (str) The directory in which python-for-android should look for your own build recipes (if any)
-#p4a.local_recipes =
+p4a.local_recipes = ./recipes/
 
 # (str) Filename to the hook for p4a
 #p4a.hook =
