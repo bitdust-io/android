@@ -1,30 +1,20 @@
 # BitDust for Android
 
-Tested on Ubuntu 18.04 Desktop and Mac OS Mojave (still failed).
+
+Tested on Ubuntu 18.04 Desktop.
 
 
-#### Ubuntu dependencies
+#### Install dependencies
 
         sudo apt-get update
         sudo apt-get upgrade
 
-        sudo apt-get install git gcc make perl
-        sudo apt-get install python3-pip openjdk-8-jdk autoconf libtool python3-venv
-        sudo apt-get install zlib1g-dev libffi-dev
+        sudo apt-get install git gcc make perl pkg-config autoconf libtool protobuf-compiler
+        sudo apt-get install python3-pip openjdk-8-jdk python3-venv
+        sudo apt-get install zlib1g-dev libffi-dev libusb-1.0-0-dev libudev-dev
         sudo apt-get install python-zopeinterface python-twisted
-        sudo apt-get install libusb-1.0-0-dev libudev-dev
-        sudo apt-get install protobuf-compiler
 
         sudo pip3 install cython
-
-
-#### MacOS dependencies
-
-        brew install git gcc make
-        sudo /usr/local/bin/python3 -m pip install Cython
-        export PATH="$PATH:/Library/Frameworks/Python.framework/Versions/3.7/bin"
-        sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
-        # still issues with zlib in python 3.7
 
 
 #### Install buildozer
@@ -42,7 +32,7 @@ Tested on Ubuntu 18.04 Desktop and Mac OS Mojave (still failed).
         make clean
 
 
-#### Build APK
+#### Build APK image
 
         make
 

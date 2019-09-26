@@ -1,4 +1,5 @@
-print('LALALALO')
+import kivy
+kivy.require('1.10.1')  # replace with your current kivy version !
 
 # install_twisted_rector must be called before importing  and using the reactor
 from kivy.support import install_twisted_reactor
