@@ -9,7 +9,7 @@ import time
 import platform
 
 import kivy
-kivy.require('1.10.1')  # replace with your current kivy version !
+kivy.require('1.9.1')  # replace with your current kivy version !
 # install_twisted_rector must be called before importing and using the reactor
 from kivy.support import install_twisted_reactor
 
@@ -38,10 +38,20 @@ class AndroidServerApp(App):
 
         print('\n'.join(sys.path))
 
-        from main.bpmain import main
+        # from main.bpmain import main
+        # ret = main(executable_path='.', start_reactor=False)
 
-        ret = main(executable_path='.', start_reactor=False)
-
+        from twisted.web import server, resource
+        from twisted.internet import reactor
+        
+        class Simple(resource.Resource):
+            isLeaf = True
+            def render_GET(self, request):
+                return "<html>Hello, world!</html>"
+        
+        site = server.Site(Simple())
+        reactor.listenTCP(8080, site)
+        # reactor.run()
 
     def do_quit(self):
         print("AndroidServerApp.do_quit")
@@ -53,3 +63,4 @@ class AndroidServerApp(App):
 
 if __name__ == "__main__":
     AndroidServerApp().run()
+    print('AndroidServerApp FINISHED')

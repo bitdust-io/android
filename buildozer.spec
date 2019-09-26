@@ -36,7 +36,8 @@ version = 1.0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptodome,twisted==19.7.0,python3
+requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptodome,attrs,hyperlink,idna,twisted==19.7.0,python3
+# requirements = incremental,kivy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -55,7 +56,7 @@ requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptod
 orientation = landscape
 
 # (list) List of service to declare
-#services = NAME:ENTRYPOINT_TO_PY,NAME2:ENTRYPOINT2_TO_PY
+services = Twisted2Webserver:src/service/main.py
 
 #
 # OSX Specific
@@ -103,7 +104,7 @@ android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
 # android.ndk_api = 21
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
-android.private_storage = True
+# android.private_storage = True
 
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
 #android.ndk_path =
