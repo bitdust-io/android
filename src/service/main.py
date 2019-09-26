@@ -1,44 +1,39 @@
-import kivy
-kivy.require('1.10.1')  # replace with your current kivy version !
+from random import sample, randint
+from string import ascii_letters
+from time import localtime, asctime, sleep
 
-# install_twisted_rector must be called before importing  and using the reactor
-from kivy.support import install_twisted_reactor
-install_twisted_reactor()
+from oscpy.server import OSCThreadServer
+from oscpy.client import OSCClient
 
-
-from twisted.internet import reactor
-from twisted.internet import protocol
-
-import sys
+CLIENT = OSCClient('localhost', 3002)
 
 
-class BitDustServerApp():
-
-    def build(self):
-        executable_path = os.getcwd()
-        try:
-            os.chdir('./src/bitdust')
-        except:
-            pass
-        from bitdust.main.bpmain import main
-        main(executable_path='./src/bitdust', start_reactor=False)
-
-    def handle_message(self, msg):
-        #self.label.text = "received:  %s\n" % msg
-
-        print('LALALALU')
-        print(msg)
-        if msg == "ping":
-            msg = "pong"
-        if msg == "plop":
-            msg = "kivy rocks"
-        #self.label.text += "responded: %s\n" % msg
-        return msg
+def ping(*_):
+    'answer to ping messages'
+    CLIENT.send_message(
+        b'/message',
+        [
+            ''.join(sample(ascii_letters, randint(10, 20)))
+            .encode('utf8'),
+        ],
+    )
+    print('CLIENT.ping')
 
 
-def run_server():
-    serverapp = BitDustServerApp()
-    serverapp.build()
+def send_date():
+    'send date to the application'
+    CLIENT.send_message(
+        b'/date',
+        [asctime(localtime()).encode('utf8'), ],
+    )
+    print('CLIENT.send_message')
+
 
 if __name__ == '__main__':
-    run_server()
+    SERVER = OSCThreadServer()
+    print('SERVER: %r' % SERVER)
+    SERVER.listen('localhost', port=3000, default=True)
+    SERVER.bind(b'/ping', ping)
+    while True:
+        sleep(1)
+        send_date()

@@ -1,66 +1,105 @@
-#!/usr/bin/env python2
-# -*- coding: UTF-8 -*-
-
-__version__ = '0.4'
-
-import os
-import sys
-import time
-import platform
-
-import kivy
-kivy.require('1.9.1')  # replace with your current kivy version !
-# install_twisted_rector must be called before importing and using the reactor
-from kivy.support import install_twisted_reactor
-
-install_twisted_reactor()
-
-from twisted.internet import reactor
-from twisted.internet import protocol
-
+# coding: utf8
+__version__ = '0.2'
 
 from kivy.app import App
-from kivy.uix.label import Label
+from kivy.lang import Builder
+from kivy.clock import Clock
+from kivy.utils import platform
+
+from jnius import autoclass
+
+from oscpy.client import OSCClient
+from oscpy.server import OSCThreadServer
 
 
-class AndroidServerApp(App):
+SERVICE_NAME = u'{packagename}.Service{servicename}'.format(
+    packagename=u'org.bitdust_io.bitdust',
+    servicename=u'Bitdustnode'
+)
+
+
+
+KV = '''
+BoxLayout:
+    orientation: 'vertical'
+    BoxLayout:
+        size_hint_y: None
+        height: '30sp'
+        Button:
+            text: 'start service'
+            on_press: app.start_service()
+        Button:
+            text: 'stop service'
+            on_press: app.stop_service()
+    ScrollView:
+        Label:
+            id: label
+            size_hint_y: None
+            height: self.texture_size[1]
+            text_size: self.size[0], None
+    BoxLayout:
+        size_hint_y: None
+        height: '30sp'
+        Button:
+            text: 'ping'
+            on_press: app.send()
+        Button:
+            text: 'clear'
+            on_press: label.text = ''
+        Label:
+            id: date
+'''
+
+
+class ClientServerApp(App):
     
     def build(self):
-        print('AndroidServerApp.build')
-        self.label = Label(text="server started\n")
-        return self.label
+        self.service = None
+        # self.start_service()
 
-    def on_start(self):
-        # /data/user/0/org.kivy.bitdust/files/app/
-        print('AndroidServerApp.on_start %s' % list(platform.uname()))
+        self.server = server = OSCThreadServer()
+        server.listen(
+            address=b'localhost',
+            port=3002,
+            default=True,
+        )
 
-        sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(__file__)), 'bitdust'))
+        server.bind(b'/message', self.display_message)
+        server.bind(b'/date', self.date)
 
-        print('\n'.join(sys.path))
+        self.client = OSCClient(b'localhost', 3000)
+        self.root = Builder.load_string(KV)
+        return self.root
 
-        # from main.bpmain import main
-        # ret = main(executable_path='.', start_reactor=False)
+    def start_service(self):
+        print('ClientServerApp.start_service platform=%r' % platform)
+        service = autoclass(SERVICE_NAME)
+        mActivity = autoclass(u'org.kivy.android.PythonActivity').mActivity
+        argument = ''
+        service.start(mActivity, argument)
+        self.service = service
+        print('ClientServerApp.start_service STARTED : %r' % self.service)
 
-        from twisted.web import server, resource
-        from twisted.internet import reactor
-        
-        class Simple(resource.Resource):
-            isLeaf = True
-            def render_GET(self, request):
-                return "<html>Hello, world!</html>"
-        
-        site = server.Site(Simple())
-        reactor.listenTCP(8080, site)
-        # reactor.run()
+    def stop_service(self):
+        print('ClientServerApp.stop_service %r' % self.service)
+        if self.service:
+            service = autoclass(SERVICE_NAME)
+            mActivity = autoclass('org.kivy.android.PythonActivity').mActivity
+            self.service.stop(mActivity)
+            self.service = None
+            print('ClientServerApp.stop_service STOPPED')
 
-    def do_quit(self):
-        print("AndroidServerApp.do_quit")
-        # Kivy
-        AndroidServerApp.get_running_app().stop()
-        # Extinction de tout
-        os._exit(0)
+    def send(self, *args):
+        self.client.send_message(b'/ping', [])
+
+    def display_message(self, message):
+        if self.root:
+            self.root.ids.label.text += '{}\n'.format(message.decode('utf8'))
+
+    def date(self, message):
+        if self.root:
+            self.root.ids.date.text = message.decode('utf8')
 
 
-if __name__ == "__main__":
-    AndroidServerApp().run()
-    print('AndroidServerApp FINISHED')
+if __name__ == '__main__':
+    ClientServerApp().run()

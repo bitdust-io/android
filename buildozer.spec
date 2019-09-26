@@ -7,10 +7,10 @@ title = BitDust
 package.name = bitdust
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.bitdust_io.bitdust
+package.domain = org.bitdust_io
 
 # (str) Source code where the main.py live
-source.dir = ./src/
+source.dir = ./src
 
 # (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas,ttf,sh
@@ -36,7 +36,7 @@ version = 1.0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptodome,attrs,hyperlink,idna,twisted==19.7.0,python3
+requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptodome,attrs,hyperlink,idna,oscpy,twisted==19.7.0,python3
 # requirements = incremental,kivy
 
 # (str) Custom source folders for requirements
@@ -56,7 +56,7 @@ requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptod
 orientation = landscape
 
 # (list) List of service to declare
-services = Twisted2Webserver:src/service/main.py
+services = Bitdustnode:./service/main.py
 
 #
 # OSX Specific
