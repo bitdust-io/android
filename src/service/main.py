@@ -79,10 +79,10 @@ def main():
     argument = json.loads(argument) if argument else None
     argument = {} if argument is None else argument
     logging.info('argument=%r', argument)
+    if argument.get('stop_service'):
+        logging.info('service to be stopped')
+        return
     try:
-        if argument.get('stop_service'):
-            logging.info('service to be stopped')
-            return
         set_foreground()
         set_auto_restart_service()
         site = server.Site(Simple())

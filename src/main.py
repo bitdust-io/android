@@ -16,8 +16,6 @@ SERVICE_NAME = u'{packagename}.Service{servicename}'.format(
     servicename=u'Bitdustnode'
 )
 
-#     orientation: 'vertical'
-
 
 KV = '''
 BoxLayout:
@@ -38,7 +36,6 @@ class BitDustApp(App):
     def build(self):
         print('BitDustApp.build')
         self.service = None
-        # self.start_service()
         self.root = Builder.load_string(KV)
         return self.root
 
@@ -56,6 +53,7 @@ class BitDustApp(App):
             argument = '{"stop_service": 1}'
         service.start(mActivity, argument)
         if finishing:
+            self.service = None
             print('BitDustApp.start_service expect to be STOPPED now')
         else:
             self.service = service
@@ -63,13 +61,10 @@ class BitDustApp(App):
 
     def stop_service(self):
         print('BitDustApp.stop_service %r' % self.service)
-        # if self.service:
         service = autoclass(SERVICE_NAME)
         mActivity = autoclass('org.kivy.android.PythonActivity').mActivity
         service.stop(mActivity)
-        self.service = None
         self.start_service(finishing=True)
-        self.service = None
         print('BitDustApp.stop_service STOPPED')
 
 
