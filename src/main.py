@@ -35,6 +35,7 @@ class BitDustApp(App):
 
     def build(self):
         print('BitDustApp.build')
+        self.icon = 'bitdust.png'
         self.service = None
         self.root = Builder.load_string(KV)
         return self.root

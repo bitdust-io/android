@@ -50,7 +50,7 @@ requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptod
 #presplash.filename = %(source.dir)s/data/presplash.png
 
 # (str) Icon of the application
-#icon.filename = %(source.dir)s/data/icon.png
+icon.filename = bitdust.png
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
 orientation = landscape

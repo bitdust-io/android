@@ -74,6 +74,18 @@ def set_foreground():
     logging.info('set_foreground DONE : %r' % service)
 
 
+def start_bitdust():
+    executable_path = os.getcwd()
+    try:
+        os.chdir('./src/bitdust')
+    except:
+        logging.exception('failed changing directory')
+        return False
+    from bitdust.main.bpmain import main
+    main(executable_path='./src/bitdust', start_reactor=False)
+    return True
+
+
 def main():
     argument = os.environ.get('PYTHON_SERVICE_ARGUMENT', 'null')
     argument = json.loads(argument) if argument else None
@@ -82,14 +94,21 @@ def main():
     if argument.get('stop_service'):
         logging.info('service to be stopped')
         return
+
     try:
         set_foreground()
         set_auto_restart_service()
-        site = server.Site(Simple())
-        srv = reactor.listenTCP(18000, site)
-        logging.info('starting reactor with %r at %r' % (site, srv.getHost(), ))
+        
+        if start_bitdust():
+            logging.info('BitDust is ready to start')
+        else:
+            logging.info('BitDust not started')
+            return
+
+        logging.info('starting reactor')
         reactor.run()
         logging.info('twisted reactor stopped')
+
         set_auto_restart_service(False)
     except Exception:
         logging.exception('Exception in main()')
