@@ -51,5 +51,8 @@ Now connect your device with USB cable and install APK file you just created:
         adb install -r bin/bitdust-1.0.1-armeabi-v7a-debug.apk
 
 
-On your device find "BitDust" application and start it. You will see a lot of output in another console window and will be to monitor running application.
+On your device find "BitDust" application and start it. You will see a lot of output in another console window and will be able to monitor running application.
 
+Now you can open web browser on your Android and open `http://127.0.0.1:18000`.
+
+Hello, world!

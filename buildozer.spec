@@ -36,7 +36,7 @@ version = 1.0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptodome,attrs,hyperlink,idna,oscpy,twisted==19.7.0,python3
+requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptodome,attrs,hyperlink,idna,twisted==19.7.0,python3
 # requirements = incremental,kivy
 
 # (str) Custom source folders for requirements
