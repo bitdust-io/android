@@ -8,6 +8,8 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.utils import platform
 
+from android.permissions import request_permissions, Permission
+
 from jnius import autoclass
 
 
@@ -40,6 +42,9 @@ class BitDustApp(App):
         self.root = Builder.load_string(KV)
         return self.root
 
+    def on_start(self):
+        self.request_app_permissions()
+
     def on_resume(self):
         print('BitDustApp.on_resume')
         if self.service:
@@ -67,6 +72,14 @@ class BitDustApp(App):
         service.stop(mActivity)
         self.start_service(finishing=True)
         print('BitDustApp.stop_service STOPPED')
+
+    def request_app_permissions(self):
+        ret = request_permissions([
+            Permission.INTERNET,
+            Permission.READ_EXTERNAL_STORAGE,
+            Permission.WRITE_EXTERNAL_STORAGE,
+        ])
+        print('BitDustApp.request_app_permissions : %r' % ret)
 
 
 if __name__ == '__main__':

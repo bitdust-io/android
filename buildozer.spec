@@ -13,7 +13,7 @@ package.domain = org.bitdust_io
 source.dir = ./src
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,ttf,sh
+source.include_exts = py,png,jpg,kv,atlas,ttf,sh,json
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -22,7 +22,7 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,sh
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-#source.exclude_dirs = tests, bin
+source.exclude_dirs = src/bitdust/.git,src/bitdust/icons,src/bitdust/release,src/bitdust/deploy,src/bitdust/devops,src/bitdust/regression
 
 # (list) List of exclusions using pattern matching
 #source.exclude_patterns = license,images/*/*.jpg
@@ -47,7 +47,7 @@ requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptod
 #garden_requirements = 
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/data/presplash.png
+presplash.filename = bitdust.png
 
 # (str) Icon of the application
 icon.filename = bitdust.png
@@ -83,7 +83,7 @@ fullscreen = 0
 # red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
 # darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
 # olive, purple, silver, teal.
-#android.presplash_color = #FFFFFF
+android.presplash_color = #FFFFFF
 
 # (list) Permissions
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
@@ -278,7 +278,7 @@ warn_on_root = 1
 #    Instead of doing:
 #
 #[app]
-#source.exclude_patterns = license,data/audio/*.wav,data/images/original/*
+source.exclude_patterns = license,data/audio/*.wav,data/images/original/*,.git,src/bitdust/.git
 #
 #    This can be translated into:
 #

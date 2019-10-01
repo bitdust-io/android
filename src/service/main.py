@@ -18,13 +18,7 @@ startLogging(sys.stdout)
 
 from jnius import autoclass
 
-
-class Simple(resource.Resource):
-    isLeaf = True
-
-    def render_GET(self, request):
-        logging.info('Hello, world!')
-        return b"<html>Hello, world!</html>"
+import encodings.idna
 
 
 def set_auto_restart_service(restart=True):
@@ -76,17 +70,14 @@ def set_foreground():
 
 def start_bitdust():
     executable_path = os.getcwd()
-    try:
-        os.chdir('./src/bitdust')
-    except:
-        logging.exception('failed changing directory')
-        return False
-    from bitdust.main.bpmain import main
-    main(executable_path='./src/bitdust', start_reactor=False)
-    return True
+    logging.info('executable_path : %r', executable_path)
+    os.chdir('bitdust')
+    logging.info('os.getcwd() : %r', os.getcwd())
+    from main.bpmain import main
+    ret = main(executable_path, start_reactor=False)
 
 
-def main():
+def run_service():
     argument = os.environ.get('PYTHON_SERVICE_ARGUMENT', 'null')
     argument = json.loads(argument) if argument else None
     argument = {} if argument is None else argument
@@ -99,15 +90,11 @@ def main():
         set_foreground()
         set_auto_restart_service()
         
-        if start_bitdust():
-            logging.info('BitDust is ready to start')
-        else:
-            logging.info('BitDust not started')
-            return
+        start_bitdust()
+        logging.info('BitDust is ready, starting Twisted reactor')
 
-        logging.info('starting reactor')
         reactor.run()
-        logging.info('twisted reactor stopped')
+        logging.info('Twisted reactor stopped')
 
         set_auto_restart_service(False)
     except Exception:
@@ -117,5 +104,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    run_service()
     logging.info('EXIT')
