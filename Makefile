@@ -27,6 +27,7 @@
 # * git
 # * buildozer
 # * pip3
+# * adb
 #
 
 .DEFAULT_GOAL := build
@@ -37,7 +38,7 @@
 install_buildozer:
 	@rm -rf buildozer/
 	@git clone https://github.com/kivy/buildozer
-	@cd buildozer/; python3 setup.py build; sudo pip3 install -e .; cd ..
+	@cd buildozer/; python3 setup.py build; sudo pip3 install -e .; cd ..;
 
 clean:
 	@rm -rf .build_incremental
@@ -56,13 +57,6 @@ pull:
 	@git pull origin master
 	@cd ..
 
-clone_p4a:
-	@rm -rf python-for-android/
-	@git clone -b v2019.08.09 --single-branch https://github.com/kivy/python-for-android.git python-for-android/
-
-recipes_fix:
-	cp -R -f -v recipes/* ./python-for-android/pythonforandroid/recipes/.
-
 .build_incremental:
 	@python3 -c "import os, re; s = re.sub('(requirements = .+?python3)','# \g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
 	@python3 -c "import os, re; s = re.sub('# requirements = incremental,kivy','requirements = incremental,kivy',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
@@ -74,3 +68,5 @@ recipes_fix:
 build: .build_incremental
 	@buildozer -v android debug
 
+logcat:
+	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -e python -e Bitdustnode -e "E AndroidRuntime"

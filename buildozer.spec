@@ -22,7 +22,7 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,sh,json
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-source.exclude_dirs = src/bitdust/.git,src/bitdust/icons,src/bitdust/release,src/bitdust/deploy,src/bitdust/devops,src/bitdust/regression
+source.exclude_dirs = src/bitdust/.git,src/bitdust/icons,src/bitdust/release,src/bitdust/deploy,src/bitdust/devops,src/bitdust/regress,src/bitdust/regression,src/bitdust/tests,src/bitdust/icons
 
 # (list) List of exclusions using pattern matching
 #source.exclude_patterns = license,images/*/*.jpg
@@ -38,6 +38,7 @@ version = 1.0.1
 # comma separated e.g. requirements = sqlite3,kivy
 requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptodome,attrs,hyperlink,idna,twisted==19.7.0,python3
 # requirements = incremental,kivy
+# there is an issue with incremental/twisted build... first you need to build only incremental and then twisted in second run
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -201,6 +202,7 @@ android.accept_sdk_license = True
 
 # (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
 android.arch = armeabi-v7a
+# android.arch = x86
 
 #
 # Python for android (p4a) specific
