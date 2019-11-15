@@ -7,13 +7,13 @@ title = BitDust
 package.name = bitdust
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.bitdust_io.bitdust
+package.domain = org.bitdust_io
 
 # (str) Source code where the main.py live
-source.dir = ./src/
+source.dir = ./src
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,ttf,sh
+source.include_exts = py,png,jpg,kv,atlas,ttf,sh,json
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -22,7 +22,7 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,sh
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-#source.exclude_dirs = tests, bin
+source.exclude_dirs = src/bitdust/.git,src/bitdust/icons,src/bitdust/release,src/bitdust/deploy,src/bitdust/devops,src/bitdust/regress,src/bitdust/regression,src/bitdust/tests,src/bitdust/icons
 
 # (list) List of exclusions using pattern matching
 #source.exclude_patterns = license,images/*/*.jpg
@@ -38,6 +38,7 @@ version = 1.0.1
 # comma separated e.g. requirements = sqlite3,kivy
 requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptodome,attrs,hyperlink,idna,twisted==19.7.0,python3
 # requirements = incremental,kivy
+# there is an issue with incremental/twisted build... first you need to build only incremental and then twisted in second run
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -47,16 +48,16 @@ requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptod
 #garden_requirements = 
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/data/presplash.png
+presplash.filename = bitdust.png
 
 # (str) Icon of the application
-#icon.filename = %(source.dir)s/data/icon.png
+icon.filename = bitdust.png
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
 orientation = landscape
 
 # (list) List of service to declare
-services = Twisted2Webserver:src/service/main.py
+services = Bitdustnode:./service/main.py
 
 #
 # OSX Specific
@@ -83,7 +84,7 @@ fullscreen = 0
 # red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
 # darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
 # olive, purple, silver, teal.
-#android.presplash_color = #FFFFFF
+android.presplash_color = #FFFFFF
 
 # (list) Permissions
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
@@ -201,6 +202,7 @@ android.accept_sdk_license = True
 
 # (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
 android.arch = armeabi-v7a
+# android.arch = x86
 
 #
 # Python for android (p4a) specific
@@ -278,7 +280,7 @@ warn_on_root = 1
 #    Instead of doing:
 #
 #[app]
-#source.exclude_patterns = license,data/audio/*.wav,data/images/original/*
+source.exclude_patterns = license,data/audio/*.wav,data/images/original/*,.git,src/bitdust/.git
 #
 #    This can be translated into:
 #

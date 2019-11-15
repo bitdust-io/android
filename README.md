@@ -17,6 +17,14 @@ Tested on Ubuntu 18.04 Desktop.
         sudo pip3 install cython
 
 
+#### Prepare application folder
+
+        sudo mkdir /app/
+        sudo chown $USER:$USER /app/
+        cd /app/
+        git clone https://github.com/bitdust-io/android.git .
+
+
 #### Install buildozer
 
         make install_buildozer
@@ -43,13 +51,15 @@ Enable "Developer Mode" on your Android device: https://developer.android.com/st
 
 Open another terminal window and run this to be able to catch Python logs from your Android:
 
-        adb logcat | grep python
+        cd /app/
+        make logcat
 
 
-Now connect your device with USB cable and install APK file you just created:
+Now connect your device with USB cable and install APK file you just created.
+Switch back to previous terminal window and run:
 
         adb install -r bin/bitdust-1.0.1-armeabi-v7a-debug.apk
 
 
-On your device find "BitDust" application and start it. You will see a lot of output in another console window and will be to monitor running application.
-
+On your device find "BitDust" application and start it.
+You will see a lot of output in another terminal window and will be able to monitor running application.
