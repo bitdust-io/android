@@ -7,14 +7,14 @@ from twisted.internet import protocol
 from twisted.web import server
 from twisted.web import resource
 
-import logging
-logging.basicConfig(level=logging.DEBUG)
+# import logging
+# logging.basicConfig(level=logging.DEBUG)
 
-from twisted.internet.defer import setDebugging
-setDebugging(True)
+# from twisted.internet.defer import setDebugging
+# setDebugging(True)
 
-from twisted.python.log import startLogging
-startLogging(sys.stdout)
+# from twisted.python.log import startLogging
+# startLogging(sys.stdout)
 
 from jnius import autoclass
 
@@ -22,13 +22,13 @@ import encodings.idna
 
 
 def set_auto_restart_service(restart=True):
-    logging.info('set_auto_restart_service restart=%r', restart)
+    # logging.info('set_auto_restart_service restart=%r', restart)
     service = autoclass('org.kivy.android.PythonService').mService
     service.setAutoRestartService(restart)
 
 
 def set_foreground():
-    logging.info('set_foreground')
+    # logging.info('set_foreground')
     channel_id = 'org.bitdust_io.bitdust.Bitdustnode'
     Context = autoclass(u'android.content.Context')
     Intent = autoclass(u'android.content.Intent')
@@ -65,44 +65,50 @@ def set_foreground():
     notification_builder.setAutoCancel(True)
     new_notification = notification_builder.getNotification()
     service.startForeground(1, new_notification)
-    logging.info('set_foreground DONE : %r' % service)
+    # logging.info('set_foreground DONE : %r' % service)
 
 
 def start_bitdust():
     executable_path = os.getcwd()
-    logging.info('executable_path : %r', executable_path)
-    os.chdir('bitdust')
-    logging.info('os.getcwd() : %r', os.getcwd())
+    # logging.info('executable_path : %r', executable_path)
+    try:
+        os.chdir('bitdust')
+    except:
+        pass
+    # logging.info('os.getcwd() : %r', os.getcwd())
     from main.bpmain import main
     ret = main(executable_path, start_reactor=False)
+    return ret
 
 
 def run_service():
     argument = os.environ.get('PYTHON_SERVICE_ARGUMENT', 'null')
     argument = json.loads(argument) if argument else None
     argument = {} if argument is None else argument
-    logging.info('argument=%r', argument)
+    # logging.info('argument=%r', argument)
+
     if argument.get('stop_service'):
-        logging.info('service to be stopped')
+        # logging.info('service to be stopped')
         return
 
     try:
         set_foreground()
         set_auto_restart_service()
         
-        start_bitdust()
-        logging.info('BitDust is ready, starting Twisted reactor')
+        # start_bitdust()
+        # logging.info('BitDust is ready, starting Twisted reactor')
 
+        reactor.callWhenRunning(start_bitdust)
         reactor.run()
-        logging.info('Twisted reactor stopped')
+        # logging.info('Twisted reactor stopped')
 
         set_auto_restart_service(False)
     except Exception:
-        logging.exception('Exception in main()')
+        # logging.exception('Exception in main()')
         # avoid auto-restart loop
         set_auto_restart_service(False)
 
 
 if __name__ == '__main__':
     run_service()
-    logging.info('EXIT')
+    # logging.info('EXIT')
