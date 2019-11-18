@@ -9,6 +9,7 @@
 .tmp/
 bin/
 venv/
-src/bitdust/
 buildozer/
 python-for-android/
+.build_incremental
+src/bitdust

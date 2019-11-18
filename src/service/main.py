@@ -77,8 +77,9 @@ def start_bitdust():
         pass
     # logging.info('os.getcwd() : %r', os.getcwd())
     from main.bpmain import main
-    ret = main(executable_path, start_reactor=False)
-    return ret
+    reactor.callLater(0.5, main, executable_path, start_reactor=False)
+    # ret = main(executable_path, start_reactor=False)
+    return True
 
 
 def run_service():
@@ -93,8 +94,8 @@ def run_service():
 
     try:
         set_foreground()
-        set_auto_restart_service()
-        
+        set_auto_restart_service(True)
+
         # start_bitdust()
         # logging.info('BitDust is ready, starting Twisted reactor')
 
