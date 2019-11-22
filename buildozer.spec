@@ -35,8 +35,9 @@ version = 1.0.1
 # version.filename = %(source.dir)s/main.py
 
 # (list) Application requirements
-# comma separated e.g. requirements = sqlite3,kivy
-requirements = kivy,service_identity,pyparsing,appdirs,psutil,cffi,six,pycryptodome,attrs,hyperlink,idna,cryptography,automat,twisted==19.7.0,python3
+# comma separated e.g. requirements = sqlite3,kivy,
+requirements = kivy,service_identity,pyparsing,appdirs,cffi,six,pycryptodome,attrs,hyperlink,idna,cryptography,automat,android,twisted==19.7.0,python3
+# requirements = kivy,python3
 # requirements = incremental,kivy
 # there is an issue with incremental/twisted build... first you need to build only incremental and then twisted in second run
 
@@ -88,6 +89,8 @@ android.presplash_color = #FFFFFF
 
 # (list) Permissions
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
+
+android.apptheme = "@style/Theme.Translucent"
 
 # (int) Target Android API, should be as high as possible.
 # android.api = 27
@@ -152,6 +155,8 @@ android.accept_sdk_license = True
 # (list) Android AAR archives to add (currently works only with sdl2_gradle
 # bootstrap)
 #android.add_aars =
+
+#android.bootstrap = webview
 
 # (list) Gradle dependencies to add (currently works only with sdl2_gradle
 # bootstrap)
@@ -227,6 +232,7 @@ p4a.local_recipes = ./recipes/
 
 # (str) Bootstrap to use for android builds
 # p4a.bootstrap = sdl2
+# p4a.bootstrap = webview
 
 # (int) port number to specify an explicit --port= p4a argument (eg for bootstrap flask)
 #p4a.port =
