@@ -90,8 +90,6 @@ android.presplash_color = #FFFFFF
 # (list) Permissions
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
 
-android.apptheme = "@style/Theme.Translucent"
-
 # (int) Target Android API, should be as high as possible.
 # android.api = 27
 
