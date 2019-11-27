@@ -13,3 +13,4 @@ buildozer/
 python-for-android/
 .build_incremental
 src/bitdust
+src/www
