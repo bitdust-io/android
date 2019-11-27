@@ -13,7 +13,7 @@ package.domain = org.bitdust_io
 source.dir = ./src
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,ttf,sh,json
+source.include_exts = py,png,svg,jpg,jpeg,ico,kv,atlas,otf,ttf,sh,json,html,js,map,css,mp3
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -37,9 +37,9 @@ version = 1.0.1
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy,
 requirements = kivy,service_identity,pyparsing,appdirs,cffi,six,pycryptodome,attrs,hyperlink,idna,cryptography,automat,android,twisted==19.7.0,python3
-# requirements = kivy,python3
 # requirements = incremental,kivy
 # there is an issue with incremental/twisted build... first you need to build only incremental and then twisted in second run
+
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -55,7 +55,7 @@ presplash.filename = bitdust.png
 icon.filename = bitdust.png
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
-orientation = landscape
+orientation = all
 
 # (list) List of service to declare
 services = Bitdustnode:./service/main.py
@@ -89,8 +89,6 @@ android.presplash_color = #FFFFFF
 
 # (list) Permissions
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
-
-android.apptheme = "@style/Theme.Translucent"
 
 # (int) Target Android API, should be as high as possible.
 # android.api = 27
@@ -150,7 +148,7 @@ android.accept_sdk_license = True
 
 # (list) List of Java files to add to the android project (can be java or a
 # directory containing the files)
-#android.add_src =
+android.add_src = java_classes/*.java
 
 # (list) Android AAR archives to add (currently works only with sdl2_gradle
 # bootstrap)
@@ -200,7 +198,7 @@ android.accept_sdk_license = True
 #android.uses_library =
 
 # (str) Android logcat filters to use
-#android.logcat_filters = *:S python:D
+android.logcat_filters = *:S python:D
 
 # (bool) Copy library instead of making a libpymodules.so
 #android.copy_libs = 1
