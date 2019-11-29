@@ -9,7 +9,7 @@ Tested on Ubuntu 18.04 Desktop.
         sudo apt-get update
         sudo apt-get upgrade
 
-        sudo apt-get install git gcc make perl pkg-config autoconf libtool protobuf-compiler
+        sudo apt-get install unzip git gcc make perl pkg-config autoconf libtool protobuf-compiler
         sudo apt-get install python3-pip openjdk-8-jdk python3-venv
         sudo apt-get install zlib1g-dev libffi-dev libusb-1.0-0-dev libudev-dev
         sudo apt-get install python-zopeinterface python-twisted
@@ -17,22 +17,23 @@ Tested on Ubuntu 18.04 Desktop.
         sudo pip3 install cython
 
 
-#### Prepare application folder
-
-        sudo mkdir /app/
-        sudo chown $USER:$USER /app/
-        cd /app/
-        git clone https://github.com/bitdust-io/android.git .
-
-
 #### Install buildozer
 
-        make install_buildozer
+		git clone https://github.com/kivy/buildozer
+		cd buildozer
+		python3 setup.py build
+		sudo pip3 install -e .
+		cd ..
 
 
-#### Clone BitDust sources
+#### Prepare application folder
 
-        make clone
+        git clone https://github.com/bitdust-io/public.git bitdust
+        git clone https://github.com/bitdust-io/ui.git bitdust.ui
+        git clone https://github.com/bitdust-io/android.git
+        ln -s bitdust android/src/bitdust
+        ln -s bitdust.ui android/src/www
+		cd android
 
 
 #### Make sure to start from clean state

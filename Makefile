@@ -44,18 +44,6 @@ clean:
 	@rm -rf .build_incremental
 	@rm -rf .buildozer
 
-clone_dev:
-	@rm -rf src/bitdust/
-	@git clone https://github.com/bitdust-io/devel.git ./src/bitdust/
-
-clone:
-	@rm -rf src/bitdust/
-	@git clone https://github.com/bitdust-io/public.git ./src/bitdust/
-
-pull:
-	@cd ./src/bitdust/
-	@git pull origin master
-	@cd ..
 
 .build_incremental:
 	@python3 -c "import os, re; s = re.sub('(requirements = .+?python3)','# \g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
