@@ -1,11 +1,11 @@
-from kivy.app import App
-from kivy.clock import Clock
-from kivy.properties import ObjectProperty, BooleanProperty
-from kivy.core.window import Window
+from kivy.app import App  # @UnresolvedImport
+from kivy.clock import Clock  # @UnresolvedImport
+from kivy.properties import BooleanProperty  # @UnresolvedImport
+from kivy.core.window import Window  # @UnresolvedImport
 
-from jnius import autoclass
+from jnius import autoclass  # @UnresolvedImport
 
-from android.permissions import request_permissions, Permission
+from android.permissions import request_permissions, Permission  # @UnresolvedImport
 
 from webviewengine import WebviewEngine  
 
@@ -63,6 +63,7 @@ class BitDustApp(App):
     def on_start(self):
         print('BitDustApp.on_start')
         self.request_app_permissions()
+        # self.create_notification_channel()
         self.start_service()
 
     def on_pause(self):
@@ -80,6 +81,7 @@ class BitDustApp(App):
         argument = ''
         if finishing:
             argument = '{"stop_service": 1}'
+        print(dir(service))
         service.start(mActivity, argument)
         if finishing:
             self.service = None
@@ -104,6 +106,19 @@ class BitDustApp(App):
             Permission.WRITE_EXTERNAL_STORAGE,
         ])
         print('BitDustApp.request_app_permissions : %r' % ret)
+
+    def create_notification_channel(self):
+        print('BitDustApp.create_notification_channel')
+        channel_id = 'org.bitdust_io.bitdust.Bitdustnode'
+        AndroidString = autoclass(u'java.lang.String')
+        Context = autoclass(u'android.content.Context')
+        NotificationManager = autoclass(u'android.app.NotificationManager')
+        NotificationChannel = autoclass(u'android.app.NotificationChannel')
+        notification_channel = NotificationChannel(channel_id, AndroidString('BitDust Channel'.encode('utf-8')), NotificationManager.IMPORTANCE_HIGH)
+        activity = autoclass('org.kivy.android.PythonActivity').mActivity
+        notification_service = activity.getSystemService(Context.NOTIFICATION_SERVICE)
+        new_channel = notification_service.createNotificationChannel(notification_channel)
+        print('BitDustApp.create_notification_channel new_channel=%r' % new_channel)
 
 
 if __name__ == '__main__':

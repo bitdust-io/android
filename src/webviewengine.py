@@ -1,8 +1,7 @@
-from kivy.uix.widget import Widget                                                              
-from kivy.clock import Clock                                                                    
-from runnable import run_on_ui_thread
-from kivy.event import EventDispatcher 
-from jnius import autoclass
+from kivy.uix.widget import Widget  # @UnresolvedImport
+from runnable import run_on_ui_thread  # @UnresolvedImport
+from kivy.event import EventDispatcher  # @UnresolvedImport
+from jnius import autoclass  # @UnresolvedImport
 from webviewclient import WebviewClient
 
 WebView = autoclass('android.webkit.WebView')                                                   
@@ -23,7 +22,7 @@ class WebviewEngine(Widget,EventDispatcher):
 		'on_page_finished',
 	    'on_received_error',
 	    'on_page_commit_visible',
- 	   'on_should_override_url_loading',
+	    'on_should_override_url_loading',
     ]
 
 	def __init__(self, **kwargs): 		
@@ -38,7 +37,7 @@ class WebviewEngine(Widget,EventDispatcher):
 
 	def dispatch_event(self, event_name, **kwargs):
 		self.dispatch(event_name, **kwargs)
-		print('WebviewEngine.dispatch_event %s %r' % (event_name, kwargs))
+		print('WebviewEngine.dispatch_event %s' % event_name)
 	
 	def _event_default_handler(self, **kwargs):
 		print('WebviewEngine._event_default_handler %r' % kwargs)
@@ -47,7 +46,7 @@ class WebviewEngine(Widget,EventDispatcher):
 		print('WebviewEngine._register_events')
 		events = self._webview_events
 		for event_name in events:
-			setattr(self,event_name,self._event_default_handler)
+			setattr(self, event_name, self._event_default_handler)
 			self.register_event_type(event_name)
 
 	def __getattr__(self, method_name):
@@ -71,16 +70,16 @@ class WebviewEngine(Widget,EventDispatcher):
 		webview = WebView(activity)   
 		settings = webview.getSettings()
 		settings.setJavaScriptEnabled(True)
-		settings.setUseWideViewPort(True) # enables viewport html meta tags
-		settings.setLoadWithOverviewMode(True) # uses viewport
-		settings.setSupportZoom(True) # enables zoom
-		settings.setBuiltInZoomControls(True) # enables zoom controls
+		settings.setUseWideViewPort(True)
+		settings.setLoadWithOverviewMode(True)
+		settings.setSupportZoom(True)
+		settings.setBuiltInZoomControls(False)
 		webviewClient = WebviewClient(self)                                                                 
 		webview.setWebViewClient(webviewClient)
 		webview.setX(self.webviewPosX)
 		webview.setY(self.webviewPosY)
 		activity.addContentView(webview, LayoutParams(self.webviewWidth,self.webviewHeight))
-		print('loading BitDust UI!')
+		print('WebviewEngine.create_webview is loading BitDust UI')
 		webview.loadUrl('file:///data/user/0/org.bitdust_io.bitdust/files/app/www/index.html')
 		self._webview_obj = webview
 
