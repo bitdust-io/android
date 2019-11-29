@@ -4,9 +4,8 @@ Runnable
 
 '''
 
-from jnius import PythonJavaClass, java_method, autoclass
+from jnius import PythonJavaClass, java_method, autoclass  # @UnresolvedImport
 
-# reference to the activity
 _PythonActivity = autoclass('org.kivy.android.PythonActivity')
 
 
