@@ -33,7 +33,7 @@ Tested on Ubuntu 18.04 Desktop.
         git clone https://github.com/bitdust-io/android.git
         ln -s bitdust android/src/bitdust
         ln -s bitdust.ui android/src/www
-		cd android
+        cd android
 
 
 #### Make sure to start from clean state
