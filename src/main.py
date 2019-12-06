@@ -36,8 +36,8 @@ class BitDustApp(App):
         print('BitDustApp._on_init_complete starting WebviewEngine')
         self.webviewEngine = WebviewEngine()
         Window.add_widget(self.webviewEngine)
-        self.webviewEngine.bind(on_page_started=self.proccess_on_page_start)
-        self.webviewEngine.bind(on_page_commit_visible=self.proccess_on_page_commit_visible)
+        # self.webviewEngine.bind(on_page_started=self.proccess_on_page_start)
+        # self.webviewEngine.bind(on_page_commit_visible=self.proccess_on_page_commit_visible)
 
     def build(self):
         ret = super(BitDustApp, self).build()
