@@ -1,3 +1,5 @@
+import time
+
 from kivy.uix.widget import Widget  # @UnresolvedImport
 from runnable import run_on_ui_thread  # @UnresolvedImport
 from kivy.event import EventDispatcher  # @UnresolvedImport
@@ -11,7 +13,7 @@ LayoutParams = autoclass('android.view.ViewGroup$LayoutParams')
 View = autoclass('android.view.View')
 
 
-class WebviewEngine(Widget,EventDispatcher): 
+class WebviewEngine(Widget, EventDispatcher): 
 
 	is_visible = True
 
@@ -32,6 +34,7 @@ class WebviewEngine(Widget,EventDispatcher):
 		self.webviewHeight = kwargs.get('height') if 'height' in kwargs else LayoutParams.MATCH_PARENT
 		self._register_events()
 		super(WebviewEngine, self).__init__(**kwargs)
+		time.sleep(0.5)
 		# Clock.schedule_once(self.create_webview, 0)
 		self.create_webview()
 
@@ -79,9 +82,9 @@ class WebviewEngine(Widget,EventDispatcher):
 		webview.setX(self.webviewPosX)
 		webview.setY(self.webviewPosY)
 		activity.addContentView(webview, LayoutParams(self.webviewWidth,self.webviewHeight))
-		print('WebviewEngine.create_webview is loading BitDust UI')
-		webview.loadUrl('file:///data/user/0/org.bitdust_io.bitdust/files/app/www/index.html')
 		self._webview_obj = webview
+		print('WebviewEngine.create_webview is loading BitDust UI')
+		self._webview_obj.loadUrl('file:///data/user/0/org.bitdust_io.bitdust/files/app/www/index.html')
 
 	@run_on_ui_thread 
 	def hide(self):
