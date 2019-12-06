@@ -19,11 +19,11 @@ Tested on Ubuntu 18.04 Desktop.
 
 #### Install buildozer
 
-		git clone https://github.com/kivy/buildozer
-		cd buildozer
-		python3 setup.py build
-		sudo pip3 install -e .
-		cd ..
+	git clone https://github.com/kivy/buildozer
+	cd buildozer
+	python3 setup.py build
+	sudo pip3 install -e .
+	cd ..
 
 
 #### Prepare application folder
@@ -46,7 +46,7 @@ Tested on Ubuntu 18.04 Desktop.
         make
 
 
-## Connect and run on Android device
+#### Connect and run on Android device
 
 Enable "Developer Mode" on your Android device: https://developer.android.com/studio/debug/dev-options
 
