@@ -14,6 +14,8 @@ from twisted.internet import reactor
 
 from jnius import autoclass  # @UnresolvedImport
 
+import encodings.idna
+
 
 def set_auto_restart_service(restart=True):
     print('set_auto_restart_service restart=%r' % restart)

@@ -7,7 +7,9 @@ from jnius import autoclass  # @UnresolvedImport
 
 from android.permissions import request_permissions, Permission  # @UnresolvedImport
 
-from webviewengine import WebviewEngine  
+from webviewengine import WebviewEngine
+
+import encodings.idna
 
 
 SERVICE_NAME = u'{packagename}.Service{servicename}'.format(
