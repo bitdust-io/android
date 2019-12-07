@@ -42,6 +42,7 @@ install_buildozer:
 
 clean:
 	@rm -rf .build_incremental
+	@rm -rf .release_incremental
 	@rm -rf .buildozer
 
 
@@ -65,9 +66,11 @@ build: .build_incremental
 	@echo '1' > .release_incremental
 
 release: .release_incremental
+	@rm -v ./bin/*.apk
 	@buildozer -v android release
-	rm -v ./bin/BitDustAndroid.apk
-	mv ./bin/bitdust__armeabi-v7a-1.0.1-armeabi-v7a-release.apk ./bin/BitDustAndroid.apk
+	@mv ./bin/bitdust__*.apk ./bin/BitDustAndroid_unsigned.apk
+	@jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore /home/bitdust/keystores/bitdust.keystore bin/BitDustAndroid_unsigned.apk bitdust
+	@~/.buildozer/android/platform/android-sdk/build-tools/29.0.2/zipalign -v 4 ./bin/BitDustAndroid_unsigned.apk  ./bin/BitDustAndroid.apk
 
 logcat:
 	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -e python -e Bitdustnode -e "E AndroidRuntime"
