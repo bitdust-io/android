@@ -56,5 +56,18 @@ clean:
 build: .build_incremental
 	@buildozer -v android debug
 
+.release_incremental:
+	@python3 -c "import os, re; s = re.sub('(requirements = .+?python3)','# \g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
+	@python3 -c "import os, re; s = re.sub('# requirements = incremental,kivy','requirements = incremental,kivy',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
+	@buildozer -v android release
+	@python3 -c "import os, re; s = re.sub('# (requirements = .+?python3)','\g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
+	@python3 -c "import os, re; s = re.sub('requirements = incremental,kivy','# requirements = incremental,kivy',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
+	@echo '1' > .release_incremental
+
+release: .release_incremental
+	@buildozer -v android release
+        rm -v ./bin/BitDustAndroid.apk
+        mv ./bin/bitdust__armeabi-v7a-1.0.1-armeabi-v7a-release.apk ./bin/BitDustAndroid.apk
+
 logcat:
 	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -e python -e Bitdustnode -e "E AndroidRuntime"
