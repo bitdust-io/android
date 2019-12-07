@@ -9,8 +9,8 @@ Tested on Ubuntu 18.04 Desktop.
         sudo apt-get update
         sudo apt-get upgrade
 
-        sudo apt-get install unzip git gcc make perl pkg-config autoconf libtool protobuf-compiler
         sudo apt-get install python3-pip openjdk-8-jdk python3-venv
+        sudo apt-get install unzip git gcc make perl pkg-config autoconf libtool protobuf-compiler llvm
         sudo apt-get install zlib1g-dev libffi-dev libusb-1.0-0-dev libudev-dev
         sudo apt-get install python-zopeinterface python-twisted
 
