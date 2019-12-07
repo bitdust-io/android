@@ -66,8 +66,8 @@ build: .build_incremental
 
 release: .release_incremental
 	@buildozer -v android release
-        rm -v ./bin/BitDustAndroid.apk
-        mv ./bin/bitdust__armeabi-v7a-1.0.1-armeabi-v7a-release.apk ./bin/BitDustAndroid.apk
+	rm -v ./bin/BitDustAndroid.apk
+	mv ./bin/bitdust__armeabi-v7a-1.0.1-armeabi-v7a-release.apk ./bin/BitDustAndroid.apk
 
 logcat:
 	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -e python -e Bitdustnode -e "E AndroidRuntime"
