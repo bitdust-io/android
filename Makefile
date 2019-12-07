@@ -42,6 +42,7 @@ install_buildozer:
 
 clean:
 	@rm -rf .build_incremental
+	@rm -rf .release_incremental
 	@rm -rf .buildozer
 
 
