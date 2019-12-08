@@ -28,7 +28,7 @@ source.exclude_dirs = src/bitdust/.git,src/bitdust/icons,src/bitdust/release,src
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 1.0.1
+version = 1.0.2
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
