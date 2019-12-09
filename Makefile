@@ -69,8 +69,6 @@ release: .release_incremental
 	@rm -v ./bin/*.apk
 	@buildozer -v android release
 	@mv ./bin/bitdust__*.apk ./bin/BitDustAndroid_unsigned.apk
-	@jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore /home/bitdust/keystores/bitdust.keystore bin/BitDustAndroid_unsigned.apk bitdust
-	@~/.buildozer/android/platform/android-sdk/build-tools/29.0.2/zipalign -v 4 ./bin/BitDustAndroid_unsigned.apk  ./bin/BitDustAndroid.apk
 
 logcat:
 	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -e python -e Bitdustnode -e "E AndroidRuntime"
