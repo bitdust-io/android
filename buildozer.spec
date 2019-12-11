@@ -4,7 +4,7 @@
 title = BitDust
 
 # (str) Package name
-package.name = bitdust
+package.name = bitdust1
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.bitdust_io
@@ -22,7 +22,7 @@ source.include_exts = py,png,svg,jpg,jpeg,ico,kv,atlas,otf,ttf,sh,json,html,js,m
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-source.exclude_dirs = src/bitdust/.git,src/bitdust/icons,src/bitdust/release,src/bitdust/deploy,src/bitdust/devops,src/bitdust/regress,src/bitdust/regression,src/bitdust/tests,src/bitdust/icons
+source.exclude_dirs = etc,src/bitdust/.git,src/bitdust/icons,src/bitdust/release,src/bitdust/deploy,src/bitdust/devops,src/bitdust/regress,src/bitdust/regression,src/bitdust/tests,src/bitdust/icons
 
 # (list) List of exclusions using pattern matching
 #source.exclude_patterns = license,images/*/*.jpg
@@ -71,7 +71,7 @@ services = Bitdustnode:./service/main.py
 osx.python_version = 3
 
 # Kivy version to use
-osx.kivy_version = 1.9.1
+osx.kivy_version = 1.11.0
 
 #
 # Android specific
@@ -94,7 +94,7 @@ android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, F
 android.api = 28
 
 # (int) Minimum API your APK will support.
-# android.minapi = 21
+# android.minapi = 28
 
 # (int) Android SDK version to use
 # android.sdk = 20
@@ -222,7 +222,7 @@ p4a.branch = develop
 # v2019.08.09
 
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
-# p4a.source_dir = ./python-for-android/
+p4a.source_dir = ./python-for-android/
 
 # (str) The directory in which python-for-android should look for your own build recipes (if any)
 p4a.local_recipes = ./recipes/

@@ -10,7 +10,9 @@
 bin/
 venv/
 buildozer/
+buildozer.spec.bk
 python-for-android/
 .build_incremental
+.release_incremental
 src/bitdust
 src/www

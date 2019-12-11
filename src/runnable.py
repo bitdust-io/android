@@ -6,7 +6,8 @@ Runnable
 
 from jnius import PythonJavaClass, java_method, autoclass  # @UnresolvedImport
 
-_PythonActivity = autoclass('org.kivy.android.PythonActivity')
+PythonActivity = autoclass('org.kivy.android.PythonActivity')
+# BitDustActivity = autoclass('org.bitdust_io.bitdust.BitDustActivity')
 
 
 class Runnable(PythonJavaClass):
@@ -25,7 +26,8 @@ class Runnable(PythonJavaClass):
         self.args = args
         self.kwargs = kwargs
         Runnable.__runnables__.append(self)
-        _PythonActivity.mActivity.runOnUiThread(self)
+        activity = PythonActivity.mActivity
+        activity.runOnUiThread(self)
 
     @java_method('()V')
     def run(self):
