@@ -6,9 +6,9 @@ from kivy.event import EventDispatcher  # @UnresolvedImport
 from jnius import autoclass  # @UnresolvedImport
 from webviewclient import WebviewClient
 
-WebView = autoclass('android.webkit.WebView')                                                   
-WebViewClient = autoclass('android.webkit.WebViewClient')                                       
-activity = autoclass('org.kivy.android.PythonActivity').mActivity   
+WebView = autoclass('android.webkit.WebView')
+WebViewClient = autoclass('android.webkit.WebViewClient')
+activity = autoclass('org.kivy.android.PythonActivity').mActivity
 LayoutParams = autoclass('android.view.ViewGroup$LayoutParams')
 View = autoclass('android.view.View')
 
@@ -29,7 +29,7 @@ class WebviewEngine(Widget, EventDispatcher):
 
 	def __init__(self, **kwargs): 		
 		self.webviewWidth = kwargs.get('width') if 'width' in kwargs else LayoutParams.MATCH_PARENT
-		self.webviewPosX = kwargs.get('posX') if 'posX' in kwargs else 0 
+		self.webviewPosX = kwargs.get('posX') if 'posX' in kwargs else 0
 		self.webviewPosY = kwargs.get('posY') if 'posY' in kwargs else 0
 		self.webviewHeight = kwargs.get('height') if 'height' in kwargs else LayoutParams.MATCH_PARENT
 		self._register_events()
@@ -41,7 +41,7 @@ class WebviewEngine(Widget, EventDispatcher):
 	def dispatch_event(self, event_name, **kwargs):
 		self.dispatch(event_name, **kwargs)
 		print('WebviewEngine.dispatch_event %s' % event_name)
-	
+
 	def _event_default_handler(self, **kwargs):
 		print('WebviewEngine._event_default_handler %r' % kwargs)
 
@@ -64,20 +64,24 @@ class WebviewEngine(Widget, EventDispatcher):
 		else:
 			raise Exception("Method %s not define" % method_name)
 
-	@run_on_ui_thread                                                                           
+	@run_on_ui_thread
 	def create_webview(self, *args):
 		print('WebviewEngine.create_webview', args)
 		if(self._webview_obj):
 			print('WebviewEngine.create_webview _webview_obj already exist: %r' % self._webview_obj)
-			return True 
-		webview = WebView(activity)   
+			return True
+		webview = WebView(activity)
 		settings = webview.getSettings()
 		settings.setJavaScriptEnabled(True)
+		settings.setAllowFileAccess(True)
+		settings.setAllowContentAccess(True)
+		settings.setAllowFileAccessFromFileURLs(True)
+		settings.setAllowUniversalAccessFromFileURLs(True)
 		settings.setUseWideViewPort(True)
 		settings.setLoadWithOverviewMode(True)
 		settings.setSupportZoom(True)
 		settings.setBuiltInZoomControls(False)
-		webviewClient = WebviewClient(self)                                                                 
+		webviewClient = WebviewClient(self)
 		webview.setWebViewClient(webviewClient)
 		webview.setX(self.webviewPosX)
 		webview.setY(self.webviewPosY)

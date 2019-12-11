@@ -8,37 +8,37 @@ import android.graphics.Bitmap;
 
 public class CustomWebviewClient extends WebViewClient{
 
-	CustomWebviewClientInterface callbackListener;
+    CustomWebviewClientInterface callbackListener;
 
-	public CustomWebviewClient(CustomWebviewClientInterface callbackListener){
-	    super();
-	    this.callbackListener = callbackListener;
-	}
+    public CustomWebviewClient(CustomWebviewClientInterface callbackListener){
+        super();
+        this.callbackListener = callbackListener;
+    }
 
-//	@Override
-//	public boolean shouldOverrideUrlLoading(WebView view, String url){
-//		this.callbackListener.shouldOverrideUrlLoading(view,url);
-//		return false;
-//	}
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, String url){
+        this.callbackListener.shouldOverrideUrlLoading(view,url);
+        return false;
+    }
 
-//	@Override
-//	public void onPageStarted(WebView view, String url, Bitmap favicon){
-//	 	this.callbackListener.onPageStarted(view,url,favicon);
-//	}
+//  @Override
+//  public void onPageStarted(WebView view, String url, Bitmap favicon){
+//      this.callbackListener.onPageStååarted(view,url,favicon);
+//  }
 
-//	@Override
-//	public void onPageFinished(WebView view, String url){
-//	 	this.callbackListener.onPageFinished(view,url);
-//	}
+//  @Override
+//  public void onPageFinished(WebView view, String url){
+//      this.callbackListener.onPageFinished(view,url);
+//  }
 
-//	@Override
-//	public void onPageCommitVisible(WebView view, String url){
-//	 	this.callbackListener.onPageCommitVisible(view,url);
-//	}
+//  @Override
+//  public void onPageCommitVisible(WebView view, String url){
+//      this.callbackListener.onPageCommitVisible(view,url);
+//  }
 
-//	@Override
-//	public void onReceivedError(WebView view,  int errorCode, String description, String failingUrl){
-//	 	this.callbackListener.onReceivedError(view, errorCode, description, failingUrl);
-//	}
+//  @Override
+//  public void onReceivedError(WebView view,  int errorCode, String description, String failingUrl){
+//      this.callbackListener.onReceivedError(view, errorCode, description, failingUrl);
+//  }
 
 }

@@ -74,3 +74,7 @@ logcat:
 	# @adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -e python -e Bitdustnode -e "E AndroidRuntime"
 	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -v "Library loading" | grep -v "Loading library" | grep -e python -e Bitdustnode -e "E AndroidRuntime" -e cordo -e "F DEBUG"
 
+download_apk:
+	@rm -rfv bin/*.apk
+	@scp android.build:android/bin/BitDustAndroid.apk bin/.
+	@ls -la bin/
