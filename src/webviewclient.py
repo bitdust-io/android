@@ -21,10 +21,10 @@ class WebviewClientCore(PythonJavaClass):
 		super(WebviewClientCore, self).__init__()
 		self._webviewEngine = webview_engine_obj
 
-# 	@java_method('(Landroid/webkit/WebView;Ljava/lang/String;)Z')
-# 	def shouldOverrideUrlLoading(self, view, url):
-# 		print('WebviewClientCore.shouldOverrideUrlLoading')
-# 		# self._webviewEngine.dispatch_event('on_should_override_url_loading', url=url)
+	@java_method('(Landroid/webkit/WebView;Ljava/lang/String;)Z')
+	def shouldOverrideUrlLoading(self, view, url):
+		print('WebviewClientCore.shouldOverrideUrlLoading')
+		# self._webviewEngine.dispatch_event('on_should_override_url_loading', url=url)
 
 # 	@java_method('(Landroid/webkit/WebView;Ljava/lang/String;Landroid/graphics/Bitmap;)V')
 # 	def onPageStarted(self, view, url, favicon):
