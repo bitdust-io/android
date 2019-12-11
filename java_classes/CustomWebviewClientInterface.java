@@ -2,7 +2,7 @@ package com.razzbee.WebviewEngine;
 
 import android.webkit.WebView;
 import java.lang.String;
-import 	android.graphics.Bitmap;
+import android.graphics.Bitmap;
 
 
 public interface CustomWebviewClientInterface{
@@ -17,4 +17,3 @@ public interface CustomWebviewClientInterface{
 
     public void onReceivedError(WebView view,  int errorCode, String description, String failingUrl);
 }
-

@@ -34,13 +34,13 @@ class WebviewEngine(Widget, EventDispatcher):
         self.webviewHeight = kwargs.get('height') if 'height' in kwargs else LayoutParams.MATCH_PARENT
         self._register_events()
         super(WebviewEngine, self).__init__(**kwargs)
-        time.sleep(0.5)
+        time.sleep(0.1)
         # Clock.schedule_once(self.create_webview, 0)
         self.create_webview()
 
     def dispatch_event(self, event_name, **kwargs):
-        self.dispatch(event_name, **kwargs)
         print('WebviewEngine.dispatch_event %s' % event_name)
+        self.dispatch(event_name, **kwargs)
 
     def _event_default_handler(self, **kwargs):
         print('WebviewEngine._event_default_handler %r' % kwargs)
@@ -58,9 +58,13 @@ class WebviewEngine(Widget, EventDispatcher):
             return None
         if method_name in ['_context',]:
             return None
-        if hasattr(self._webview_obj,method_name):
-            call_method = lambda *x: getattr(self._webview_obj,method_name)(*x) 
-            return call_method
+        if hasattr(self._webview_obj, method_name):
+            try:
+                call_method = lambda *x: getattr(self._webview_obj, method_name)(*x) 
+                return call_method
+            except Exception as exc:
+                print('WebviewEngine.__getattr__ error :', exc)
+                raise exc
         else:
             raise Exception("Method %s not define" % method_name)
 
@@ -73,13 +77,13 @@ class WebviewEngine(Widget, EventDispatcher):
         webview = WebView(activity)
         settings = webview.getSettings()
         settings.setJavaScriptEnabled(True)
-        settings.setAllowFileAccess(True)
-        settings.setAllowContentAccess(True)
-        settings.setAllowFileAccessFromFileURLs(True)
-        settings.setAllowUniversalAccessFromFileURLs(True)
+        # settings.setAllowFileAccess(True)
+        # settings.setAllowContentAccess(True)
+        # settings.setAllowFileAccessFromFileURLs(True)
+        # settings.setAllowUniversalAccessFromFileURLs(True)
         settings.setUseWideViewPort(True)
         settings.setLoadWithOverviewMode(True)
-        settings.setSupportZoom(True)
+        settings.setSupportZoom(False)
         settings.setBuiltInZoomControls(False)
         webviewClient = WebviewClient(self)
         webview.setWebViewClient(webviewClient)
