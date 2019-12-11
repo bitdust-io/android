@@ -60,18 +60,17 @@ build: .build_incremental
 .release_incremental:
 	@python3 -c "import os, re; s = re.sub('(requirements = .+?python3)','# \g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
 	@python3 -c "import os, re; s = re.sub('# requirements = incremental,kivy','requirements = incremental,kivy',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
-	@buildozer -v android release | grep -v "Listing " | grep -v "Compiling  " | grep -v "# Copy "
+	@buildozer -v android release | grep -v "Listing " | grep -v "Compiling " | grep -v "# Copy " | grep -v "# Create directory "
 	@python3 -c "import os, re; s = re.sub('# (requirements = .+?python3)','\g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
 	@python3 -c "import os, re; s = re.sub('requirements = incremental,kivy','# requirements = incremental,kivy',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
 	@echo '1' > .release_incremental
 
 release: .release_incremental
 	@rm -v ./bin/*.apk
-	@buildozer -v android release | grep -v "Listing " | grep -v "Compiling  " | grep -v "# Copy "
+	@buildozer -v android release | grep -v "Listing " | grep -v "Compiling " | grep -v "# Copy " | grep -v "# Create directory "
 	@mv ./bin/bitdust__*.apk ./bin/BitDustAndroid_unsigned.apk
 
 logcat:
-	# @adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -e python -e Bitdustnode -e "E AndroidRuntime"
 	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -v "Library loading" | grep -v "Loading library" | grep -e python -e Bitdustnode -e "E AndroidRuntime" -e cordo -e "F DEBUG"
 
 download_apk:
