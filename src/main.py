@@ -17,6 +17,13 @@ SERVICE_NAME = u'{packagename}.Service{servicename}'.format(
     servicename=u'Bitdustnode'
 )
 
+APP_STARTUP_PERMISSIONS = [
+    Permission.INTERNET,
+    Permission.READ_EXTERNAL_STORAGE,
+    Permission.WRITE_EXTERNAL_STORAGE,
+    Permission.FOREGROUND_SERVICE,
+]
+
 
 class BitDustApp(App):
 
@@ -100,13 +107,10 @@ class BitDustApp(App):
         self.start_service(finishing=True)
         print('BitDustApp.stop_service STOPPED')
 
-    def request_app_permissions(self):
+    def request_app_permissions(self, list_permissions=[]):
+        global APP_STARTUP_PERMISSIONS
         print('BitDustApp.request_app_permissions')
-        ret = request_permissions([
-            Permission.INTERNET,
-            Permission.READ_EXTERNAL_STORAGE,
-            Permission.WRITE_EXTERNAL_STORAGE,
-        ])
+        ret = request_permissions(list_permissions or APP_STARTUP_PERMISSIONS)
         print('BitDustApp.request_app_permissions : %r' % ret)
 
     def create_notification_channel(self):

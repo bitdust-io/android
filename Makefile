@@ -71,4 +71,6 @@ release: .release_incremental
 	@mv ./bin/bitdust__*.apk ./bin/BitDustAndroid_unsigned.apk
 
 logcat:
-	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -e python -e Bitdustnode -e "E AndroidRuntime"
+	# @adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -e python -e Bitdustnode -e "E AndroidRuntime"
+	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -v "Library loading" | grep -v "Loading library" | grep -e python -e Bitdustnode -e "E AndroidRuntime" -e cordo -e "F DEBUG"
+
