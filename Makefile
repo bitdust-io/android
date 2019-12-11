@@ -60,14 +60,14 @@ build: .build_incremental
 .release_incremental:
 	@python3 -c "import os, re; s = re.sub('(requirements = .+?python3)','# \g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
 	@python3 -c "import os, re; s = re.sub('# requirements = incremental,kivy','requirements = incremental,kivy',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
-	@buildozer -v android release
+	@buildozer -v android release | grep -v "Listing " | grep -v "Compiling  " | grep -v "# Copy "
 	@python3 -c "import os, re; s = re.sub('# (requirements = .+?python3)','\g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
 	@python3 -c "import os, re; s = re.sub('requirements = incremental,kivy','# requirements = incremental,kivy',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
 	@echo '1' > .release_incremental
 
 release: .release_incremental
 	@rm -v ./bin/*.apk
-	@buildozer -v android release
+	@buildozer -v android release | grep -v "Listing " | grep -v "Compiling  " | grep -v "# Copy "
 	@mv ./bin/bitdust__*.apk ./bin/BitDustAndroid_unsigned.apk
 
 logcat:
@@ -78,3 +78,7 @@ download_apk:
 	@rm -rfv bin/*.apk
 	@scp android.build:android/bin/BitDustAndroid.apk bin/.
 	@ls -la bin/
+
+log_tail:
+	@adb shell tail -f /storage/emulated/0/.bitdust/logs/android.log
+
