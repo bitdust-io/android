@@ -25,6 +25,7 @@ class WebviewEngine(Widget, EventDispatcher):
         'on_received_error',
         'on_page_commit_visible',
         'on_should_override_url_loading',
+        'on_console_message',
     ]
 
     def __init__(self, **kwargs):       
@@ -77,10 +78,10 @@ class WebviewEngine(Widget, EventDispatcher):
         webview = WebView(activity)
         settings = webview.getSettings()
         settings.setJavaScriptEnabled(True)
-        # settings.setAllowFileAccess(True)
-        # settings.setAllowContentAccess(True)
-        # settings.setAllowFileAccessFromFileURLs(True)
-        # settings.setAllowUniversalAccessFromFileURLs(True)
+        settings.setAllowFileAccess(True)
+        settings.setAllowContentAccess(True)
+        settings.setAllowFileAccessFromFileURLs(True)
+        settings.setAllowUniversalAccessFromFileURLs(True)
         settings.setUseWideViewPort(True)
         settings.setLoadWithOverviewMode(True)
         settings.setSupportZoom(False)

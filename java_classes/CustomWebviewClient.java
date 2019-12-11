@@ -1,8 +1,9 @@
 package com.razzbee.WebviewEngine;
 
-import android.webkit.WebView;
 import android.view.View;
+import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.ConsoleMessage;
 import java.lang.String;
 import android.graphics.Bitmap;
 
@@ -21,24 +22,30 @@ public class CustomWebviewClient extends WebViewClient {
         return false;
     }
 
-  @Override
-  public void onPageStarted(WebView view, String url, Bitmap favicon) {
-      this.callbackListener.onPageStarted(view, url, favicon);
-  }
+    @Override
+    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+        this.callbackListener.onPageStarted(view, url, favicon);
+    }
 
-  @Override
-  public void onPageFinished(WebView view, String url) {
-      this.callbackListener.onPageFinished(view, url);
-  }
+    @Override
+    public void onPageFinished(WebView view, String url) {
+        this.callbackListener.onPageFinished(view, url);
+    }
 
-  @Override
-  public void onPageCommitVisible(WebView view, String url) {
-      this.callbackListener.onPageCommitVisible(view, url);
-  }
+    @Override
+    public void onPageCommitVisible(WebView view, String url) {
+        this.callbackListener.onPageCommitVisible(view, url);
+    }
 
-  @Override
-  public void onReceivedError(WebView view,  int errorCode, String description, String failingUrl) {
-      this.callbackListener.onReceivedError(view, errorCode, description, failingUrl);
-  }
+    @Override
+    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+        this.callbackListener.onReceivedError(view, errorCode, description, failingUrl);
+    }
+
+    @Override
+    public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+        this.callbackListener.onConsoleMessage(consoleMessage);
+        return true;
+    }
 
 }

@@ -45,3 +45,8 @@ class WebviewClientCore(PythonJavaClass):
     def onReceivedError(self, view, errorCode, description, failingUrl):
         print('WebviewClientCore.onReceivedError %r %r %r %r' % (view, errorCode, description, failingUrl))
         self._webviewEngine.dispatch_event('on_received_error', webview=view, error_code=errorCode, description=description, failing_url=failingUrl)
+
+    @java_method('(Landroid/webkit/ConsoleMessage;)Z')
+    def onConsoleMessage(self, msg):
+        print('WebviewClientCore.onConsoleMessage', msg)
+        self._webviewEngine.dispatch_event('on_console_message', msg=msg)
