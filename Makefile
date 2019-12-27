@@ -25,7 +25,6 @@
 # * python
 # * virtualenv
 # * git
-# * buildozer
 # * pip3
 # * adb
 #
@@ -35,49 +34,82 @@
 .PHONY: build
 
 
-install_buildozer:
+install_dependencies_ubuntu:
+	@sudo apt-get update; sudo apt-get upgrade
+	@sudo apt-get install python3-pip openjdk-8-jdk python3-venv unzip git gcc make perl pkg-config autoconf libtool protobuf-compiler llvm zlib1g-dev libffi-dev libusb-1.0-0-dev libudev-dev python-zopeinterface python-twisted
+	@sudo pip3 install cython
+
+install_dependencies_macos:
+	@brew install pkg-config sdl2 sdl2_image sdl2_ttf sdl2_mixer gstreamer autoconf automake libtool
+	@ln -s /usr/local/bin/glibtoolize /usr/local/bin/libtoolize
+
+install_buildozer_ubuntu:
 	@rm -rf buildozer/
 	@git clone https://github.com/kivy/buildozer
 	@cd buildozer/; python3 setup.py build; sudo pip3 install -e .; cd ..;
+
+install_buildozer_macos:
+	@rm -rf buildozer/
+	@git clone https://github.com/kivy/buildozer
+	@python3 -m virtualenv venv
+	@cd buildozer/; ../venv/bin/python setup.py build; ../venv/bin/pip install -e .; cd ..;
+
+install_p4a:
+	@rm -rf python-for-android/
+	@git clone --single-branch --branch develop https://github.com/kivy/python-for-android.git
+	@cp -r -v etc/AndroidManifest.tmpl.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/templates/
+	@mkdir -p ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/res/xml/
+	@cp -r -v etc/res/xml/network_security_config.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/res/xml/
+	@cp -r etc/PythonActivity.java ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/java/org/kivy/android/
+
+update_engine_repo:
+	@cd ../bitdust; git fetch --all; git reset --hard origin/master; cd ../bitdust.android;
+
+update_ui_repo:
+	@cd ../bitdust.ui; git fetch --all; git reset --hard origin/gh-pages; cd ../bitdust.android;
 
 clean:
 	@rm -rf .build_incremental
 	@rm -rf .release_incremental
 	@rm -rf .buildozer
 
+rewrite_dist_files:
+	@cp -r -v etc/PythonActivity.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/kivy/android/
 
 .build_incremental:
 	@python3 -c "import os, re; s = re.sub('(requirements = .+?python3)','# \g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
 	@python3 -c "import os, re; s = re.sub('# requirements = incremental,kivy','requirements = incremental,kivy',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
-	@buildozer -v android debug
+	@VIRTUAL_ENV=1 ./venv/bin/buildozer -v android debug
 	@python3 -c "import os, re; s = re.sub('# (requirements = .+?python3)','\g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
 	@python3 -c "import os, re; s = re.sub('requirements = incremental,kivy','# requirements = incremental,kivy',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
 	@echo '1' > .build_incremental
 
-build: .build_incremental
-	@buildozer -v android debug
+build: .build_incremental rewrite_dist_files
+	@VIRTUAL_ENV=1 ./venv/bin/buildozer -v android debug
 
 .release_incremental:
 	@python3 -c "import os, re; s = re.sub('(requirements = .+?python3)','# \g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
 	@python3 -c "import os, re; s = re.sub('# requirements = incremental,kivy','requirements = incremental,kivy',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
-	@buildozer -v android release | grep -v "Listing " | grep -v "Compiling " | grep -v "# Copy " | grep -v "# Create directory "
+	@VIRTUAL_ENV=1 ./venv/bin/buildozer -v android release | grep -v "Listing " | grep -v "Compiling " | grep -v "# Copy " | grep -v "# Create directory "
 	@python3 -c "import os, re; s = re.sub('# (requirements = .+?python3)','\g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
 	@python3 -c "import os, re; s = re.sub('requirements = incremental,kivy','# requirements = incremental,kivy',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
 	@echo '1' > .release_incremental
 
-release: .release_incremental
-	@rm -v ./bin/*.apk
-	@buildozer -v android release | grep -v "Listing " | grep -v "Compiling " | grep -v "# Copy " | grep -v "# Create directory "
-	@mv ./bin/bitdust__*.apk ./bin/BitDustAndroid_unsigned.apk
-
-logcat:
-	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -v "Library loading" | grep -v "Loading library" | grep -e python -e Bitdustnode -e "E AndroidRuntime" -e cordo -e "F DEBUG"
+release: .release_incremental rewrite_dist_files
+	@rm -rfv ./bin/*.apk
+	@VIRTUAL_ENV=1 ./venv/bin/buildozer -v android release | grep -v "Listing " | grep -v "Compiling " | grep -v "# Copy " | grep -v "# Create directory "
+	@mv ./bin/bitdust*.apk ./bin/BitDustAndroid_unsigned.apk
 
 download_apk:
 	@rm -rfv bin/*.apk
-	@scp android.build:android/bin/BitDustAndroid.apk bin/.
+	@scp android.build:bitdust.android/bin/BitDustAndroid.apk bin/.
 	@ls -la bin/
+
+test_apk:
+	@adb install -r bin/BitDustAndroid.apk
+
+logcat:
+	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -v "Library loading" | grep -v "Loading library" | grep -v "AppleWebKit/537.36 (KHTML, like Gecko)" | grep -e python -e Bitdustnode -e "E AndroidRuntime" -e "F DEBUG" -e "PythonActivity:" -e "WebViewConsole"
 
 log_tail:
 	@adb shell tail -f /storage/emulated/0/.bitdust/logs/android.log
-

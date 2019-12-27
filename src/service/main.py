@@ -1,10 +1,16 @@
+from io import open
+
 import os
+import sys
 import json
 
 from twisted.internet import reactor
+from twisted.internet import endpoints
+from twisted.web.server import Site
+from twisted.web.static import File
 
-# import logging
-# logging.basicConfig(level=logging.DEBUG)
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 # from twisted.internet.defer import setDebugging
 # setDebugging(True)
@@ -16,16 +22,16 @@ from jnius import autoclass  # @UnresolvedImport
 
 import encodings.idna
 
+PACKAGE_NAME = 'org.bitdust_io.bitdust1'
+SERVICE_STARTED_MARKER_FILENAME = f'/data/user/0/{PACKAGE_NAME}/local_web_server'
 
-def set_auto_restart_service(restart=True):
-    print('set_auto_restart_service restart=%r' % restart)
-    service = autoclass('org.kivy.android.PythonService').mService
-    service.setAutoRestartService(restart)
+# BitDustActivity = autoclass('org.bitdust_io.bitdust.BitDustActivity')
+PythonActivity = autoclass('org.kivy.android.PythonActivity')
 
 
 def set_foreground():
     print('set_foreground')
-    channel_id = 'org.bitdust_io.bitdust.Bitdustnode'
+    channel_id = f'{PACKAGE_NAME}.Bitdustnode'
     Context = autoclass(u'android.content.Context')
     Intent = autoclass(u'android.content.Intent')
     PendingIntent = autoclass(u'android.app.PendingIntent')
@@ -36,7 +42,6 @@ def set_foreground():
     notification_channel = NotificationChannel(channel_id, AndroidString('BitDust Channel'.encode('utf-8')), NotificationManager.IMPORTANCE_HIGH)
     Notification = autoclass(u'android.app.Notification')
     service = autoclass('org.kivy.android.PythonService').mService
-    PythonActivity = autoclass(u'org.kivy.android.PythonActivity')
     notification_service = service.getSystemService(Context.NOTIFICATION_SERVICE)
     notification_service.createNotificationChannel(notification_channel)
     app_context = service.getApplication().getApplicationContext()
@@ -76,6 +81,20 @@ def start_bitdust():
     return True
 
 
+def start_web_server(web_port_number=8888):
+    resource = File(f'/data/user/0/{PACKAGE_NAME}/files/app/www/')
+    factory = Site(resource)
+    endpoint = endpoints.TCP4ServerEndpoint(reactor, web_port_number)
+    endpoint.listen(factory)
+    fout = open(SERVICE_STARTED_MARKER_FILENAME, 'w')
+    fout.write('localhost %d' % web_port_number)
+    fout.flush()
+    os.fsync(fout.fileno())
+    fout.close()
+    print('start_web_server file written', SERVICE_STARTED_MARKER_FILENAME)
+    return endpoint
+
+
 def run_service():
     argument = os.environ.get('PYTHON_SERVICE_ARGUMENT', 'null')
     argument = json.loads(argument) if argument else None
@@ -89,19 +108,18 @@ def run_service():
     try:
         set_foreground()
 
-        # set_auto_restart_service(True)
-
+        # reactor.callWhenRunning(start_web_server)  # @UndefinedVariable
         reactor.callWhenRunning(start_bitdust)  # @UndefinedVariable
         reactor.run()  # @UndefinedVariable
 
         print('Twisted reactor stopped')
 
-        # set_auto_restart_service(False)
+        if os.path.isfile(SERVICE_STARTED_MARKER_FILENAME):
+            os.remove(SERVICE_STARTED_MARKER_FILENAME)
+            print('file erased:', SERVICE_STARTED_MARKER_FILENAME)
+
     except Exception as exc:
         print('Exception in run_service() : %r' % exc)
-
-        # avoid auto-restart loop
-        # set_auto_restart_service(False)
 
 
 if __name__ == '__main__':
