@@ -75,6 +75,7 @@ clean:
 
 rewrite_dist_files:
 	@cp -r -v etc/PythonActivity.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/kivy/android/
+	@cp -r -v etc/AndroidManifest.tmpl.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/templates/
 
 .build_incremental:
 	@python3 -c "import os, re; s = re.sub('(requirements = .+?python3)','# \g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
