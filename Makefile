@@ -109,8 +109,20 @@ download_apk:
 test_apk:
 	@adb install -r bin/BitDustAndroid.apk
 
-logcat:
+log_adb:
 	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -v "Library loading" | grep -v "Loading library" | grep -v "AppleWebKit/537.36 (KHTML, like Gecko)" | grep -v "I Bitdustnode:   " | grep -v "I Bitdustnode: DEBUG:jnius.reflect:" | grep -e python -e Bitdustnode -e "E AndroidRuntime" -e "F DEBUG" -e "PythonActivity:" -e "WebViewConsole"
 
-log_tail:
+log_main:
 	@adb shell tail -f /storage/emulated/0/.bitdust/logs/android.log
+
+log_states:
+	@adb shell tail -f /storage/emulated/0/.bitdust/logs/automat.log
+
+log_packets:
+	@adb shell tail -f /storage/emulated/0/.bitdust/logs/packets.log
+
+log_api:
+	@adb shell tail -f /storage/emulated/0/.bitdust/logs/api.log
+
+shell:
+	@adb shell "cd /storage/emulated/0/.bitdust/; ls -la; sh;"
