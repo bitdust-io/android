@@ -10,7 +10,7 @@ from twisted.web.server import Site
 from twisted.web.static import File
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 
 # from twisted.internet.defer import setDebugging
 # setDebugging(True)
