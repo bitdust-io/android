@@ -128,9 +128,9 @@ public class PythonActivity extends SDLActivity {
     }
 
     protected void parseSelectedFilePath(int resultCode, Intent intent) {
-        Log.v(TAG, "PythonActivity is running parseSelectedFilePath for " + intent.getData());
         Uri[] results = null;
         if (resultCode == RESULT_OK && intent != null) {
+            Log.v(TAG, "PythonActivity is running parseSelectedFilePath for " + intent.getData());
             results  = new Uri[1];
             try {
                 String full_path = getImagePath(intent.getData());
@@ -141,6 +141,9 @@ public class PythonActivity extends SDLActivity {
             } catch (UnsupportedEncodingException exc) {
                 Log.e(TAG, "PythonActivity parseSelectedFilePath error encoding file path");
             }
+        }
+        else {
+            Log.v(TAG, "PythonActivity is running parseSelectedFilePath return EMPTY LIST: resultCode=%r intent=%r" % (resultCode, intent, ));
         }
         mUploadMessage.onReceiveValue(results);
         mUploadMessage = null;

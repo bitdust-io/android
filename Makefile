@@ -116,13 +116,13 @@ log_main:
 	@adb shell tail -f /storage/emulated/0/.bitdust/logs/android.log
 
 log_states:
-	@adb shell tail -f /storage/emulated/0/.bitdust/logs/automat.log
-
-log_packets:
-	@adb shell tail -f /storage/emulated/0/.bitdust/logs/packets.log
-
-log_api:
-	@adb shell tail -f /storage/emulated/0/.bitdust/logs/api.log
+	@adb shell tail -f /storage/emulated/0/.bitdust/logs/automats.log
 
 shell:
 	@adb shell "cd /storage/emulated/0/.bitdust/; ls -la; sh;"
+
+cat_main_log:
+	@adb shell cat /storage/emulated/0/.bitdust/logs/android.log
+
+cat_automat_log:
+	@adb shell cat /storage/emulated/0/.bitdust/logs/automats.log
