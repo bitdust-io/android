@@ -83,7 +83,7 @@ public class PythonActivity extends SDLActivity {
     private ValueCallback<Uri[]> mUploadMessage;
 
     public void createWebView() {
-        Log.v(TAG, "PythonActivity is creating WebView");
+        Log.v(TAG, "createWebView()");
         webView = new WebView(this);
         webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -108,7 +108,8 @@ public class PythonActivity extends SDLActivity {
         this.addContentView(webView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
-    public String getImagePath(Uri uri){
+    public String getImagePath(Uri uri) {
+        Log.v(TAG, "getImagePath()");
         Cursor cursor = getContentResolver().query(uri, null, null, null, null);
         cursor.moveToFirst();
         String document_id = cursor.getString(0);
@@ -128,6 +129,7 @@ public class PythonActivity extends SDLActivity {
     }
 
     protected void parseSelectedFilePath(int resultCode, Intent intent) {
+        Log.v(TAG, "parseSelectedFilePath()");
         Uri[] results = null;
         if (resultCode == RESULT_OK && intent != null) {
             Log.v(TAG, "PythonActivity is running parseSelectedFilePath for " + intent.getData());
@@ -143,7 +145,7 @@ public class PythonActivity extends SDLActivity {
             }
         }
         else {
-            Log.v(TAG, "PythonActivity is running parseSelectedFilePath return EMPTY LIST: resultCode=%r intent=%r" % (resultCode, intent, ));
+            Log.v(TAG, "PythonActivity is running parseSelectedFilePath return EMPTY LIST: resultCode=" + resultCode + " intent=" + intent);
         }
         mUploadMessage.onReceiveValue(results);
         mUploadMessage = null;
@@ -152,7 +154,7 @@ public class PythonActivity extends SDLActivity {
     public class MyWebChromeClient extends WebChromeClient {
 
         public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> filePath, WebChromeClient.FileChooserParams fileChooserParams) {
-            Log.v(TAG, "PythonActivity is running onShowFileChooser");
+            Log.v(TAG, "onShowFileChooser()");
             if (mUploadMessage != null) {
                 Log.v(TAG, "PythonActivity mUploadMessage is not empty");
                 mUploadMessage.onReceiveValue(null);
@@ -186,7 +188,7 @@ public class PythonActivity extends SDLActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG, "PythonActivity onCreate running");
+        Log.v(TAG, "onCreate()");
         resourceManager = new ResourceManager(this);
 
         Log.v(TAG, "About to do super onCreate");
@@ -200,6 +202,7 @@ public class PythonActivity extends SDLActivity {
     }
 
     public void loadLibraries() {
+        Log.v(TAG, "loadLibraries()");
         String app_root = new String(getAppRoot());
         File app_root_file = new File(app_root);
         PythonUtil.loadLibraries(app_root_file,
@@ -220,7 +223,7 @@ public class PythonActivity extends SDLActivity {
      * threads.)
      */
     public void toastError(final String msg) {
-
+        Log.v(TAG, "toastError(): " + msg);
         final Activity thisActivity = this;
 
         runOnUiThread(new Runnable () {
@@ -242,13 +245,14 @@ public class PythonActivity extends SDLActivity {
         @Override
         protected String doInBackground(String... params) {
             File app_root_file = new File(params[0]);
-            Log.v(TAG, "Ready to unpack");
+            Log.v(TAG, "doInBackground(): Ready to unpack");
             unpackData("private", app_root_file);
             return null;
         }
 
         @Override
         protected void onPostExecute(String result) {
+            Log.v(TAG, "onPostExecute() " + result);
             // Figure out the directory where the game is. If the game was
             // given to us via an intent, then we use the scheme-specific
             // part of that intent to determine the file to launch. We
@@ -352,7 +356,7 @@ public class PythonActivity extends SDLActivity {
 
     public void unpackData(final String resource, File target) {
 
-        Log.v(TAG, "UNPACKING!!! " + resource + " " + target.getName());
+        Log.v(TAG, "unpackData!!! " + resource + " " + target.getName());
 
         // The version of data in memory and on disk.
         String data_version = resourceManager.getString(resource + "_version");
@@ -426,12 +430,14 @@ public class PythonActivity extends SDLActivity {
     private List<NewIntentListener> newIntentListeners = null;
 
     public void registerNewIntentListener(NewIntentListener listener) {
+        Log.v(TAG, "registerNewIntentListener()");
         if ( this.newIntentListeners == null )
             this.newIntentListeners = Collections.synchronizedList(new ArrayList<NewIntentListener>());
         this.newIntentListeners.add(listener);
     }
 
     public void unregisterNewIntentListener(NewIntentListener listener) {
+        Log.v(TAG, "unregisterNewIntentListener()");
         if ( this.newIntentListeners == null )
             return;
         this.newIntentListeners.remove(listener);
@@ -439,6 +445,7 @@ public class PythonActivity extends SDLActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        Log.v(TAG, "onNewIntent()");
         if ( this.newIntentListeners == null )
             return;
         this.onResume();
@@ -461,12 +468,14 @@ public class PythonActivity extends SDLActivity {
     private List<ActivityResultListener> activityResultListeners = null;
 
     public void registerActivityResultListener(ActivityResultListener listener) {
+        Log.v(TAG, "registerActivityResultListener()");
         if ( this.activityResultListeners == null )
             this.activityResultListeners = Collections.synchronizedList(new ArrayList<ActivityResultListener>());
         this.activityResultListeners.add(listener);
     }
 
     public void unregisterActivityResultListener(ActivityResultListener listener) {
+        Log.v(TAG, "unregisterActivityResultListener()");
         if ( this.activityResultListeners == null )
             return;
         this.activityResultListeners.remove(listener);
@@ -474,6 +483,7 @@ public class PythonActivity extends SDLActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        Log.v(TAG, "onActivityResult()");
         if (requestCode == INPUT_FILE_REQUEST_CODE && mUploadMessage != null) {
             parseSelectedFilePath(resultCode, intent);
             return;
@@ -514,6 +524,7 @@ public class PythonActivity extends SDLActivity {
             String pythonServiceArgument,
             boolean showForegroundNotification
             ) {
+        Log.v(TAG, "_do_start_service()");
         Intent serviceIntent = new Intent(PythonActivity.mActivity, PythonService.class);
         String argument = PythonActivity.mActivity.getFilesDir().getAbsolutePath();
         String filesDirectory = argument;
@@ -535,6 +546,7 @@ public class PythonActivity extends SDLActivity {
     }
 
     public static void stop_service() {
+        Log.v(TAG, "stop_service()");
         Intent serviceIntent = new Intent(PythonActivity.mActivity, PythonService.class);
         PythonActivity.mActivity.stopService(serviceIntent);
     }
@@ -559,6 +571,7 @@ public class PythonActivity extends SDLActivity {
      **/
     @Override
     public void appConfirmedActive() {
+        Log.v(TAG, "appConfirmedActive()");
         if (!mAppConfirmedActive) {
             Log.v(TAG, "appConfirmedActive() -> preparing loading screen removal");
             mAppConfirmedActive = true;
@@ -571,6 +584,7 @@ public class PythonActivity extends SDLActivity {
      *  screen will be removed.
      **/
     public void considerLoadingScreenRemoval() {
+        Log.v(TAG, "considerLoadingScreenRemoval()");
         if (loadingScreenRemovalTimer != null)
             return;
         runOnUiThread(new Runnable() {
@@ -605,6 +619,7 @@ public class PythonActivity extends SDLActivity {
     }
 
     public void removeLoadingScreen() {
+        Log.v(TAG, "removeLoadingScreen()");
         runOnUiThread(new Runnable() {
             public void run() {
                 if (PythonActivity.mImageView != null && 
@@ -640,7 +655,7 @@ public class PythonActivity extends SDLActivity {
         // 2. if we have a layout, just set it in the layout.
         // 3. If we have an mImageView already, then do nothing because it will have
         // already been made the content view or added to the layout.
-
+        Log.v(TAG, "showLoadingScreen()");
         if (mImageView == null) {
             int presplashId = this.resourceManager.getIdentifier("presplash", "drawable");
             InputStream is = this.getResources().openRawResource(presplashId);
@@ -691,17 +706,38 @@ public class PythonActivity extends SDLActivity {
             // You must call removeView() on the child's parent first.")
         }
     }
-    
+
+    @Override
+    protected void onStop() {
+        Log.v(TAG, "onStop()");
+        try {
+            super.onStop();
+        } catch (UnsatisfiedLinkError e) {
+            Log.v(TAG, "onStop() failed");
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.v(TAG, "onDestroy()");
+        try {
+            super.onDestroy();
+        } catch (UnsatisfiedLinkError e) {
+            Log.v(TAG, "onDestroy() failed");
+        }
+    }
+
     @Override
     protected void onPause() {
+        Log.v(TAG, "onPause()");
         if (this.mWakeLock != null && mWakeLock.isHeld()) {
+            Log.v(TAG, "onPause() will call mWakeLock.release()");
             this.mWakeLock.release();
         }
-
-        Log.v(TAG, "onPause()");
         try {
             super.onPause();
         } catch (UnsatisfiedLinkError e) {
+            Log.v(TAG, "onPause() failed");
             // Catch pause while still in loading screen failing to
             // call native function (since it's not yet loaded)
         }
@@ -709,10 +745,11 @@ public class PythonActivity extends SDLActivity {
 
     @Override
     protected void onResume() {
+        Log.v(TAG, "onResume()");
         if (this.mWakeLock != null) {
+            Log.v(TAG, "onResume() mWakeLock.acquire()");
             this.mWakeLock.acquire();
         }
-        Log.v(TAG, "onResume()");
         try {
             super.onResume();
         } catch (UnsatisfiedLinkError e) {
@@ -724,6 +761,7 @@ public class PythonActivity extends SDLActivity {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
+        Log.v(TAG, "onWindowFocusChanged()");
         try {
             super.onWindowFocusChanged(hasFocus);
         } catch (UnsatisfiedLinkError e) {
@@ -764,6 +802,7 @@ public class PythonActivity extends SDLActivity {
      * Used by android.permissions p4a module to check a permission
      **/
     public boolean checkCurrentPermission(String permission) {
+        Log.v(TAG, "checkCurrentPermission()");
         if (android.os.Build.VERSION.SDK_INT < 23)
             return true;
 
@@ -784,6 +823,7 @@ public class PythonActivity extends SDLActivity {
      * Used by android.permissions p4a module to request runtime permissions
      **/
     public void requestPermissionsWithRequestCode(String[] permissions, int requestCode) {
+        Log.v(TAG, "requestPermissionsWithRequestCode()");
         if (android.os.Build.VERSION.SDK_INT < 23)
             return;
         try {
@@ -797,6 +837,7 @@ public class PythonActivity extends SDLActivity {
     }
 
     public void requestPermissions(String[] permissions) {
+        Log.v(TAG, "requestPermissions()");
         requestPermissionsWithRequestCode(permissions, 1);
     }
 }

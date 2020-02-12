@@ -16,7 +16,7 @@ PythonActivity = autoclass('org.kivy.android.PythonActivity')
 
 PACKAGE_NAME = 'org.bitdust_io.bitdust1'
 
-SERVICE_STARTED_MARKER_FILENAME = f'/data/user/0/{PACKAGE_NAME}/local_web_server'
+# SERVICE_STARTED_MARKER_FILENAME = f'/data/user/0/{PACKAGE_NAME}/local_web_server'
 
 
 class WebviewEngine(Widget, EventDispatcher): 

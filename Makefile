@@ -110,7 +110,10 @@ test_apk:
 	@adb install -r bin/BitDustAndroid.apk
 
 log_adb:
-	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -v "Library loading" | grep -v "Loading library" | grep -v "AppleWebKit/537.36 (KHTML, like Gecko)" | grep -v "I Bitdustnode:   " | grep -v "I Bitdustnode: DEBUG:jnius.reflect:" | grep -e python -e Bitdustnode -e "E AndroidRuntime" -e "F DEBUG" -e "PythonActivity:" -e "WebViewConsole"
+	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -v "Library loading" | grep -v "Loading library" | grep -v "AppleWebKit/537.36 (KHTML, like Gecko)" | grep -v "I Bitdustnode:   " | grep -v "I Bitdustnode: DEBUG:jnius.reflect:" | grep -e python -e Bitdustnode -e "E AndroidRuntime" -e "F DEBUG" -e "PythonActivity:" -e "WebViewConsole" -e "SDL" -e "GameManagerService:"
+
+log_adb_full:
+	@adb logcat
 
 log_main:
 	@adb shell tail -f /storage/emulated/0/.bitdust/logs/android.log

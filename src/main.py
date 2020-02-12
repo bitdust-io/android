@@ -20,7 +20,7 @@ SERVICE_NAME = '{packagename}.Service{servicename}'.format(
     servicename='Bitdustnode'
 )
 
-SERVICE_STARTED_MARKER_FILENAME = f'/data/user/0/{PACKAGE_NAME}/local_web_server'
+# SERVICE_STARTED_MARKER_FILENAME = f'/data/user/0/{PACKAGE_NAME}/local_web_server'
 
 APP_STARTUP_PERMISSIONS = [
     Permission.INTERNET,
@@ -53,8 +53,12 @@ class BitDustApp(App):
 #         if os.path.isfile(SERVICE_STARTED_MARKER_FILENAME):
 #             os.remove(SERVICE_STARTED_MARKER_FILENAME)
 #             print('BitDustApp._on_init_complete file erased:', SERVICE_STARTED_MARKER_FILENAME)
-        self.webviewEngine = WebviewEngine()
-        Window.add_widget(self.webviewEngine)
+        if not self.webviewEngine:
+            print('BitDustApp._on_init_complete   new WebviewEngine window to be created')
+            self.webviewEngine = WebviewEngine()
+            Window.add_widget(self.webviewEngine)
+        else:
+            print('BitDustApp._on_init_complete   WebviewEngine window already exist')
         # self.webviewEngine.bind(on_page_started=self.proccess_on_page_start)
         # self.webviewEngine.bind(on_page_commit_visible=self.proccess_on_page_commit_visible)
 
@@ -89,6 +93,13 @@ class BitDustApp(App):
 
     def on_pause(self):
         print('BitDustApp.on_pause')
+        # self.start_service()
+        # if not self.webviewEngine:
+        #     print('BitDustApp.on_pause   new WebviewEngine window to be created')
+        #     self.webviewEngine = WebviewEngine()
+        #     Window.add_widget(self.webviewEngine)
+        # else:
+        #     print('BitDustApp.on_pause   WebviewEngine window already exist')
         return True
 
     def on_resume(self):
@@ -102,7 +113,7 @@ class BitDustApp(App):
         argument = ''
         if finishing:
             argument = '{"stop_service": 1}'
-        print(dir(service))
+        print('BitDustApp.start_service: %r' % type(service))
         service.start(mActivity, argument)
         if finishing:
             self.service = None
@@ -125,6 +136,9 @@ class BitDustApp(App):
         print('BitDustApp.request_app_permissions : %r' % ret)
 
     def create_notification_channel(self):
+        """
+        Not used.
+        """
         print('BitDustApp.create_notification_channel')
         channel_id = f'{PACKAGE_NAME}.Bitdustnode'
         AndroidString = autoclass(u'java.lang.String')

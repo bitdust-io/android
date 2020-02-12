@@ -23,7 +23,7 @@ from jnius import autoclass  # @UnresolvedImport
 import encodings.idna
 
 PACKAGE_NAME = 'org.bitdust_io.bitdust1'
-SERVICE_STARTED_MARKER_FILENAME = f'/data/user/0/{PACKAGE_NAME}/local_web_server'
+# SERVICE_STARTED_MARKER_FILENAME = f'/data/user/0/{PACKAGE_NAME}/local_web_server'
 
 # BitDustActivity = autoclass('org.bitdust_io.bitdust.BitDustActivity')
 PythonActivity = autoclass('org.kivy.android.PythonActivity')
@@ -82,16 +82,19 @@ def start_bitdust():
 
 
 def start_web_server(web_port_number=8888):
+    """
+    Not in use.
+    """
     resource = File(f'/data/user/0/{PACKAGE_NAME}/files/app/www/')
     factory = Site(resource)
     endpoint = endpoints.TCP4ServerEndpoint(reactor, web_port_number)
     endpoint.listen(factory)
-    fout = open(SERVICE_STARTED_MARKER_FILENAME, 'w')
-    fout.write('localhost %d' % web_port_number)
-    fout.flush()
-    os.fsync(fout.fileno())
-    fout.close()
-    print('start_web_server file written', SERVICE_STARTED_MARKER_FILENAME)
+    # fout = open(SERVICE_STARTED_MARKER_FILENAME, 'w')
+    # fout.write('localhost %d' % web_port_number)
+    # fout.flush()
+    # os.fsync(fout.fileno())
+    # fout.close()
+    # print('start_web_server file written', SERVICE_STARTED_MARKER_FILENAME)
     return endpoint
 
 
@@ -99,10 +102,10 @@ def run_service():
     argument = os.environ.get('PYTHON_SERVICE_ARGUMENT', 'null')
     argument = json.loads(argument) if argument else None
     argument = {} if argument is None else argument
-    print('argument %r' % argument)
+    print('run_service() argument : %r' % argument)
 
     if argument.get('stop_service'):
-        print('service to be stopped')
+        print('run_service() service to be stopped now')
         return
 
     try:
@@ -112,11 +115,11 @@ def run_service():
         reactor.callWhenRunning(start_bitdust)  # @UndefinedVariable
         reactor.run()  # @UndefinedVariable
 
-        print('Twisted reactor stopped')
+        print('run_service() Twisted reactor stopped')
 
-        if os.path.isfile(SERVICE_STARTED_MARKER_FILENAME):
-            os.remove(SERVICE_STARTED_MARKER_FILENAME)
-            print('file erased:', SERVICE_STARTED_MARKER_FILENAME)
+        # if os.path.isfile(SERVICE_STARTED_MARKER_FILENAME):
+        #     os.remove(SERVICE_STARTED_MARKER_FILENAME)
+        #     print('run_service() file erased:', SERVICE_STARTED_MARKER_FILENAME)
 
     except Exception as exc:
         print('Exception in run_service() : %r' % exc)
