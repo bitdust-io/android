@@ -49,7 +49,7 @@ def set_foreground():
     title = AndroidString("BitDust".encode('utf-8'))
     message = AndroidString("Application is running in background".encode('utf-8'))
     notification_intent = Intent(app_context, PythonActivity)
-    notification_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK)
+    notification_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY)
     notification_intent.setAction(Intent.ACTION_MAIN)
     notification_intent.addCategory(Intent.CATEGORY_LAUNCHER)
     intent = PendingIntent.getActivity(service, 0, notification_intent, 0)

@@ -71,16 +71,10 @@ public class PythonActivity extends SDLActivity {
     private Bundle mMetaData = null;
     private PowerManager.WakeLock mWakeLock = null;
     private static boolean appliedWindowedModeHack = false;
-
-    public String getAppRoot() {
-        String app_root =  getFilesDir().getAbsolutePath() + "/app";
-        return app_root;
-    }
-
     private static final int INPUT_FILE_REQUEST_CODE = 10001;
-    public WebView webView;
-    private WebSettings webSettings;
-    private ValueCallback<Uri[]> mUploadMessage;
+    public WebView webView = null;
+    private WebSettings webSettings = null;
+    private ValueCallback<Uri[]> mUploadMessage = null;
 
     public void createWebView() {
         Log.v(TAG, "createWebView()");
@@ -106,6 +100,11 @@ public class PythonActivity extends SDLActivity {
             webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
         this.addContentView(webView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+    }
+
+    public String getAppRoot() {
+        String app_root =  getFilesDir().getAbsolutePath() + "/app";
+        return app_root;
     }
 
     public String getImagePath(Uri uri) {
@@ -184,21 +183,6 @@ public class PythonActivity extends SDLActivity {
 
     public class MyWebViewClient extends WebViewClient {
 
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG, "onCreate()");
-        resourceManager = new ResourceManager(this);
-
-        Log.v(TAG, "About to do super onCreate");
-        super.onCreate(savedInstanceState);
-        Log.v(TAG, "Did super onCreate");
-
-        this.mActivity = this;
-        this.showLoadingScreen();
-
-        new UnpackFilesTask().execute(getAppRoot());
     }
 
     public void loadLibraries() {
@@ -612,7 +596,7 @@ public class PythonActivity extends SDLActivity {
                         }
                     };
                     loadingScreenRemovalTimer = new Timer();
-                    loadingScreenRemovalTimer.schedule(removalTask, 5000);
+                    loadingScreenRemovalTimer.schedule(removalTask, 1000);
                 }
             }
         });
@@ -708,6 +692,21 @@ public class PythonActivity extends SDLActivity {
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate()");
+        resourceManager = new ResourceManager(this);
+
+        Log.v(TAG, "About to do super onCreate");
+        super.onCreate(savedInstanceState);
+        Log.v(TAG, "Did super onCreate");
+
+        this.mActivity = this;
+        this.showLoadingScreen();
+
+        new UnpackFilesTask().execute(getAppRoot());
+    }
+
+    @Override
     protected void onStop() {
         Log.v(TAG, "onStop()");
         try {
@@ -720,6 +719,14 @@ public class PythonActivity extends SDLActivity {
     @Override
     protected void onDestroy() {
         Log.v(TAG, "onDestroy()");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if (webView != null) {
+                Log.v(TAG, "onDestroy()   about to call webView.destroy()");
+                webView.destroy();
+                webView = null;
+            }
+        }
+        stop_service();
         try {
             super.onDestroy();
         } catch (UnsatisfiedLinkError e) {
@@ -741,6 +748,12 @@ public class PythonActivity extends SDLActivity {
             // Catch pause while still in loading screen failing to
             // call native function (since it's not yet loaded)
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if (webView != null) {
+                webView.onPause();
+                webView.pauseTimers();
+            }
+        }
     }
 
     @Override
@@ -757,6 +770,18 @@ public class PythonActivity extends SDLActivity {
             // call native function (since it's not yet loaded)
         }
         considerLoadingScreenRemoval();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if (webView != null) {
+                webView.resumeTimers();
+                webView.onResume();
+            }
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.v(TAG, "onRestart()");
+        super.onRestart();
     }
 
     @Override
@@ -803,7 +828,7 @@ public class PythonActivity extends SDLActivity {
      **/
     public boolean checkCurrentPermission(String permission) {
         Log.v(TAG, "checkCurrentPermission()");
-        if (android.os.Build.VERSION.SDK_INT < 23)
+        if (Build.VERSION.SDK_INT < 23)
             return true;
 
         try {
@@ -824,7 +849,7 @@ public class PythonActivity extends SDLActivity {
      **/
     public void requestPermissionsWithRequestCode(String[] permissions, int requestCode) {
         Log.v(TAG, "requestPermissionsWithRequestCode()");
-        if (android.os.Build.VERSION.SDK_INT < 23)
+        if (Build.VERSION.SDK_INT < 23)
             return;
         try {
             java.lang.reflect.Method methodRequestPermission =

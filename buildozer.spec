@@ -58,7 +58,7 @@ icon.filename = bitdust.png
 orientation = all
 
 # (list) List of service to declare
-services = Bitdustnode:./service/main.py
+# services = Bitdustnode:./service/main.py
 
 #
 # OSX Specific

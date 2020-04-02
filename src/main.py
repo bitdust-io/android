@@ -89,22 +89,18 @@ class BitDustApp(App):
         print('BitDustApp.on_start')
         self.request_app_permissions()
         # self.create_notification_channel()
-        self.start_service()
+        # self.start_service()
+
+    def on_stop(self):
+        print('BitDustApp.on_stop')
 
     def on_pause(self):
         print('BitDustApp.on_pause')
-        # self.start_service()
-        # if not self.webviewEngine:
-        #     print('BitDustApp.on_pause   new WebviewEngine window to be created')
-        #     self.webviewEngine = WebviewEngine()
-        #     Window.add_widget(self.webviewEngine)
-        # else:
-        #     print('BitDustApp.on_pause   WebviewEngine window already exist')
         return True
 
     def on_resume(self):
         print('BitDustApp.on_resume')
-        self.start_service()
+        # self.start_service()
 
     def start_service(self, finishing=False):
         print('BitDustApp.start_service finishing=%r' % finishing)
