@@ -89,18 +89,22 @@ class BitDustApp(App):
         print('BitDustApp.on_start')
         self.request_app_permissions()
         # self.create_notification_channel()
-        # self.start_service()
+        self.start_service()
 
     def on_stop(self):
         print('BitDustApp.on_stop')
 
     def on_pause(self):
         print('BitDustApp.on_pause')
+        if self.webviewEngine:
+            self.webviewEngine._webview_obj.loadUrl(f'file:///data/user/0/{PACKAGE_NAME}/files/app/www/img/logo-pictogram-white.61b08a81.png')
         return True
 
     def on_resume(self):
         print('BitDustApp.on_resume')
-        # self.start_service()
+        self.start_service()
+        if self.webviewEngine:
+            self.webviewEngine._webview_obj.loadUrl(f'file:///data/user/0/{PACKAGE_NAME}/files/app/www/index.html')
 
     def start_service(self, finishing=False):
         print('BitDustApp.start_service finishing=%r' % finishing)

@@ -77,7 +77,22 @@ def start_bitdust():
         pass
     print('executable_path after : %r' % os.getcwd())
     from main.bpmain import main
-    reactor.callLater(0.01, main, executable_path, start_reactor=False)  # @UndefinedVariable
+    # reactor.callLater(0, main, executable_path, start_reactor=False)  # @UndefinedVariable
+    main(executable_path, start_reactor=False)
+    return True
+
+
+def stop_bitdust():
+    executable_path = os.getcwd()
+    print('stop_bitdust executable_path=%r' % executable_path)
+    try:
+        os.chdir('bitdust')
+    except:
+        pass
+    print('executable_path after : %r' % os.getcwd())
+    from main import shutdowner
+    # reactor.callLater(0, shutdowner.A, 'stop', 'exit')  # @UndefinedVariable
+    shutdowner.A('stop', 'exit')
     return True
 
 
@@ -106,6 +121,7 @@ def run_service():
 
     if argument.get('stop_service'):
         print('run_service() service to be stopped now')
+        stop_bitdust()
         return
 
     try:
