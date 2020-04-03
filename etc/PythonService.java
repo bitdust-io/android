@@ -58,6 +58,12 @@ public class PythonService extends Service implements Runnable {
 
     @Override
     public IBinder onBind(Intent arg0) {
+        if (arg0 != null) {
+            String action = arg0.getAction();
+            Log.v(TAG, "onBind() action is : " + action);
+        } else {
+            Log.v(TAG, "onBind() intent is NULL!!!");
+        }
         return null;
     }
 
@@ -73,6 +79,8 @@ public class PythonService extends Service implements Runnable {
         if (intent != null) {
             String action = intent.getAction();
             Log.v(TAG, "onStartCommand() action is : " + action);
+        } else {
+            Log.v(TAG, "onStartCommand() intent is NULL!!!");
         }
         if (pythonThread != null) {
             Log.v(TAG, "service exists, do not start again");

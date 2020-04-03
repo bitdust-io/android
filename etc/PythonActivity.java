@@ -1,12 +1,17 @@
 package org.kivy.android;
 
+import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.File;
+import java.io.OutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.UnsatisfiedLinkError;
 import java.util.ArrayList;
@@ -15,7 +20,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.net.URL;
 import java.net.URLEncoder;
+import java.net.HttpURLConnection;
 
 import android.app.Activity;
 import android.content.Context;
@@ -30,21 +37,21 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.Manifest;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Build;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.net.Uri;
-import android.os.Build;
-import android.view.ViewGroup.LayoutParams;
 import android.webkit.ConsoleMessage;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -76,10 +83,27 @@ public class PythonActivity extends SDLActivity {
     private WebSettings webSettings = null;
     private ValueCallback<Uri[]> mUploadMessage = null;
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate()");
+        resourceManager = new ResourceManager(this);
+
+        Log.v(TAG, "About to do super onCreate");
+        super.onCreate(savedInstanceState);
+        Log.v(TAG, "Did super onCreate");
+
+        this.mActivity = this;
+        this.showLoadingScreen();
+
+        new UnpackFilesTask().execute(getAppRoot());
+    }
+
+
     public void createWebView() {
         Log.v(TAG, "createWebView()");
-        webView = new WebView(this);
-        webSettings = webView.getSettings();
+        this.webView = new WebView(this);
+        webSettings = this.webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
@@ -90,16 +114,16 @@ public class PythonActivity extends SDLActivity {
         webSettings.setSupportZoom(false);
         webSettings.setBuiltInZoomControls(false);
         webSettings.setAppCacheEnabled(false);
-        webView.setWebContentsDebuggingEnabled(true);
-        webView.setWebViewClient(new WebViewClient());
-        webView.setWebChromeClient(new MyWebChromeClient());
+        this.webView.setWebContentsDebuggingEnabled(true);
+        this.webView.setWebViewClient(new WebViewClient());
+        this.webView.setWebChromeClient(new MyWebChromeClient());
         //if SDK version is greater of 19 then activate hardware acceleration otherwise activate software acceleration
         if (Build.VERSION.SDK_INT >= 19) {
-            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            this.webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         } else if (Build.VERSION.SDK_INT >= 11 && Build.VERSION.SDK_INT < 19) {
-            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            this.webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-        this.addContentView(webView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        this.addContentView(this.webView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
     public String getAppRoot() {
@@ -429,7 +453,12 @@ public class PythonActivity extends SDLActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Log.v(TAG, "onNewIntent()");
+        if (intent != null) {
+            String action = intent.getAction();
+            Log.v(TAG, "onNewIntent() action is : " + action);
+        } else {
+            Log.v(TAG, "onNewIntent() intent is NULL!!!");
+        }
         if ( this.newIntentListeners == null )
             return;
         this.onResume();
@@ -569,6 +598,7 @@ public class PythonActivity extends SDLActivity {
      **/
     public void considerLoadingScreenRemoval() {
         Log.v(TAG, "considerLoadingScreenRemoval()");
+        requestGetURL("http://localhost:8180/process/health/v1");
         if (loadingScreenRemovalTimer != null)
             return;
         runOnUiThread(new Runnable() {
@@ -692,21 +722,6 @@ public class PythonActivity extends SDLActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG, "onCreate()");
-        resourceManager = new ResourceManager(this);
-
-        Log.v(TAG, "About to do super onCreate");
-        super.onCreate(savedInstanceState);
-        Log.v(TAG, "Did super onCreate");
-
-        this.mActivity = this;
-        this.showLoadingScreen();
-
-        new UnpackFilesTask().execute(getAppRoot());
-    }
-
-    @Override
     protected void onStop() {
         Log.v(TAG, "onStop()");
         try {
@@ -720,13 +735,13 @@ public class PythonActivity extends SDLActivity {
     protected void onDestroy() {
         Log.v(TAG, "onDestroy()");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (webView != null) {
+            if (this.webView != null) {
                 Log.v(TAG, "onDestroy()   about to call webView.destroy()");
-                webView.destroy();
-                webView = null;
+                this.webView.destroy();
+                this.webView = null;
             }
         }
-        stop_service();
+        requestGetURL("http://localhost:8180/process/stop/v1");
         try {
             super.onDestroy();
         } catch (UnsatisfiedLinkError e) {
@@ -749,9 +764,9 @@ public class PythonActivity extends SDLActivity {
             // call native function (since it's not yet loaded)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (webView != null) {
-                webView.onPause();
-                webView.pauseTimers();
+            if (this.webView != null) {
+                this.webView.onPause();
+                this.webView.pauseTimers();
             }
         }
     }
@@ -771,9 +786,9 @@ public class PythonActivity extends SDLActivity {
         }
         considerLoadingScreenRemoval();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (webView != null) {
-                webView.resumeTimers();
-                webView.onResume();
+            if (this.webView != null) {
+                this.webView.resumeTimers();
+                this.webView.onResume();
             }
         }
     }
@@ -865,4 +880,144 @@ public class PythonActivity extends SDLActivity {
         Log.v(TAG, "requestPermissions()");
         requestPermissionsWithRequestCode(permissions, 1);
     }
+
+
+    private class HttpRequestGET extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.v(TAG, "HttpRequestGET.onPreExecute()");
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            Log.v(TAG, "HttpRequestGET.doInBackground() " + urls[0]);
+            String result;
+            try {
+                URL url = new URL(urls[0]);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setRequestProperty("Content-Type", "application/json; utf-8");
+                urlConnection.setRequestProperty("Accept", "application/json");
+                urlConnection.setDoOutput(true);
+        
+                String jsonInputString = "";
+                try(OutputStream outStream = urlConnection.getOutputStream()) {
+                    byte[] inp = jsonInputString.getBytes("utf-8");
+                    outStream.write(inp, 0, inp.length);
+                }
+        
+                try(BufferedReader br = new BufferedReader(
+                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"))) {
+                        StringBuilder response = new StringBuilder();
+                        String responseLine = null;
+                        while ((responseLine = br.readLine()) != null) {
+                            response.append(responseLine.trim());
+                        }
+                        result = response.toString();
+                        Log.v(TAG, "HttpRequestGET.doInBackground() response received");
+                } finally {
+                    urlConnection.disconnect();
+                }
+                return result;
+            }
+            catch (Exception exc) {
+                Log.e(TAG, "HttpRequestGET.doInBackground() failed: " + exc);
+                return "";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.v(TAG, "HttpRequestGET.onPostExecute() " + result);
+        }
+    }
+
+
+    public String requestGetURL(String url_str) {
+        Log.v(TAG, "requestGetURL() " + url_str);
+        new HttpRequestGET().execute(url_str);
+        return "";
+    }
+
+
+//    public String requestPostURL(String url_str) {
+//        Log.v(TAG, "requestPostURL() " + url_str);
+//        String result;
+//        try {
+//            URL url = new URL(url_str);
+//            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+//            urlConnection.setRequestMethod("POST");
+//            urlConnection.setRequestProperty("Content-Type", "application/json; utf-8");
+//            urlConnection.setRequestProperty("Accept", "application/json");
+//            urlConnection.setDoOutput(true);
+//    
+//            String jsonInputString = "{}";
+//            try(OutputStream outStream = urlConnection.getOutputStream()) {
+//                byte[] inp = jsonInputString.getBytes("utf-8");
+//                outStream.write(inp, 0, inp.length);
+//            }
+//    
+//            try(BufferedReader br = new BufferedReader(
+//                new InputStreamReader(urlConnection.getInputStream(), "utf-8"))) {
+//                    StringBuilder response = new StringBuilder();
+//                    String responseLine = null;
+//                    while ((responseLine = br.readLine()) != null) {
+//                        response.append(responseLine.trim());
+//                    }
+//                    result = response.toString();
+//                    Log.v(TAG, "requestPostURL() response received");
+//            } finally {
+//                urlConnection.disconnect();
+//            }
+//            Log.v(TAG, "requestPostURL() OK : " + result);
+//        } catch (Exception exc) {
+//            Log.e(TAG, "requestPostURL() failed : " + exc);
+//            return null;
+//        }
+//        return result;
+//    }
+
+//    public String requestGetURL(String url_str) {
+//        Log.v(TAG, "requestGetURL() " + url_str);
+//        final String[] result = {""};
+//        final String urll = url_str;
+//        runOnUiThread(new Runnable() {
+//            public void run() {
+//                try {
+//                    URL url = new URL(urll);
+//                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+//                    urlConnection.setRequestMethod("GET");
+//                    urlConnection.setRequestProperty("Content-Type", "application/json; utf-8");
+//                    urlConnection.setRequestProperty("Accept", "application/json");
+//                    urlConnection.setDoOutput(true);
+//            
+//                    String jsonInputString = "";
+//                    try(OutputStream outStream = urlConnection.getOutputStream()) {
+//                        byte[] inp = jsonInputString.getBytes("utf-8");
+//                        outStream.write(inp, 0, inp.length);
+//                    }
+//            
+//                    try(BufferedReader br = new BufferedReader(
+//                        new InputStreamReader(urlConnection.getInputStream(), "utf-8"))) {
+//                            StringBuilder response = new StringBuilder();
+//                            String responseLine = null;
+//                            while ((responseLine = br.readLine()) != null) {
+//                                response.append(responseLine.trim());
+//                            }
+//                            result[0] = response.toString();
+//                            Log.v(TAG, "requestGetURL() response received");
+//                    } finally {
+//                        urlConnection.disconnect();
+//                    }
+//                }
+//                catch (Exception exc) {
+//                    Log.e(TAG, "requestGetURL() failed: " + exc);
+//                }
+//            }
+//        });
+//        Log.v(TAG, "requestGetURL() OK : " + result[0]);
+//        return result[0];
+//    }
+
 }
