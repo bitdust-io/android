@@ -42,6 +42,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Build;
 import android.os.PowerManager;
+import android.os.Process;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -87,11 +88,11 @@ public class PythonActivity extends SDLActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate()");
-        resourceManager = new ResourceManager(this);
-
         Log.v(TAG, "About to do super onCreate");
         super.onCreate(savedInstanceState);
         Log.v(TAG, "Did super onCreate");
+
+        resourceManager = new ResourceManager(this);
 
         this.mActivity = this;
         this.showLoadingScreen();
@@ -606,7 +607,7 @@ public class PythonActivity extends SDLActivity {
      **/
     public void considerLoadingScreenRemoval() {
         Log.v(TAG, "considerLoadingScreenRemoval()");
-        requestGetURL("http://localhost:8180/process/health/v1");
+        //requestGetURL("http://localhost:8180/process/health/v1");
         if (loadingScreenRemovalTimer != null)
             return;
         runOnUiThread(new Runnable() {
@@ -634,7 +635,7 @@ public class PythonActivity extends SDLActivity {
                         }
                     };
                     loadingScreenRemovalTimer = new Timer();
-                    loadingScreenRemovalTimer.schedule(removalTask, 100);
+                    loadingScreenRemovalTimer.schedule(removalTask, 5000);
                 }
             }
         });
@@ -741,7 +742,7 @@ public class PythonActivity extends SDLActivity {
 
     @Override
     protected void onStop() {
-        Log.v(TAG, "onStop()");
+        Log.v(TAG, "onStop() isFinishing: " + this.isFinishing());
         //requestGetURL("http://localhost:8180/process/stop/v1");
         try {
             super.onStop();
@@ -753,24 +754,35 @@ public class PythonActivity extends SDLActivity {
     @Override
     protected void onDestroy() {
         Log.v(TAG, "onDestroy()");
-        requestGetURL("http://localhost:8180/process/stop/v1");
+        String process_stop_result = requestGetURL("http://localhost:8180/process/stop/v1");
+        Log.v(TAG, "onDestroy() process_stop_result : " + process_stop_result);
+        String process_health_result = "ok";
+        while (process_health_result != "") {
+            process_health_result = requestGetURL("http://localhost:8180/process/health/v1");
+            Log.v(TAG, "onDestroy() process_health_result : " + process_health_result);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             if (this.webView != null) {
                 Log.v(TAG, "onDestroy()   about to call webView.destroy()");
-                //this.webView.destroy();
-                //this.webView = null;
+                this.webView.destroy();
+                this.webView = null;
             }
         }
+        Log.v(TAG, "onDestroy()   about to call super onDestroy");
         try {
             super.onDestroy();
         } catch (Exception e) {
-            Log.v(TAG, "onDestroy() failed : " + e);
+            Log.v(TAG, "onDestroy() super onDestroy failed : " + e);
         }
+        Log.v(TAG, "onDestroy() success");
+        Log.v(TAG, "onDestroy() going to kill process " + Process.myPid());
+        Process.killProcess(Process.myPid());
+        Log.v(TAG, "onDestroy() process suppose tobe killed");
     }
 
     @Override
     protected void onPause() {
-        Log.v(TAG, "onPause()");
+        Log.v(TAG, "onPause() isFinishing: " + this.isFinishing());
         if (this.mWakeLock != null && mWakeLock.isHeld()) {
             Log.v(TAG, "onPause() will call mWakeLock.release()");
             this.mWakeLock.release();
@@ -783,8 +795,8 @@ public class PythonActivity extends SDLActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             if (this.webView != null) {
                 Log.v(TAG, "onPause()   about to call webView.onPause()");
-                //this.webView.onPause();
-                //this.webView.pauseTimers();
+                this.webView.onPause();
+                this.webView.pauseTimers();
             }
         }
     }
@@ -805,8 +817,8 @@ public class PythonActivity extends SDLActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             if (this.webView != null) {
                 Log.v(TAG, "onResume()   about to call webView.resumeTimers()");
-                //this.webView.resumeTimers();
-                //this.webView.onResume();
+                this.webView.resumeTimers();
+                this.webView.onResume();
             }
         }
     }
@@ -815,6 +827,24 @@ public class PythonActivity extends SDLActivity {
     protected void onRestart() {
         Log.v(TAG, "onRestart()");
         super.onRestart();
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        Log.v(TAG, "onDetachedFromWindow()");
+        super.onDetachedFromWindow();
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        Log.v(TAG, "onAttachedToWindow()");
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        Log.v(TAG, "onActivityReenter() " + resultCode);
+        super.onActivityReenter(resultCode, data);
     }
 
     @Override
