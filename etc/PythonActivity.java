@@ -279,6 +279,7 @@ public class PythonActivity extends SDLActivity {
             String app_root_dir = getAppRoot();
             if (getIntent() != null && getIntent().getAction() != null &&
                     getIntent().getAction().equals("org.kivy.LAUNCH")) {
+                Log.v(TAG, "onPostExecute() is going to LAUNCH a file " + getIntent().getData().getSchemeSpecificPart());
                 File path = new File(getIntent().getData().getSchemeSpecificPart());
 
                 Project p = Project.scanDirectory(path);
@@ -286,6 +287,8 @@ public class PythonActivity extends SDLActivity {
                 SDLActivity.nativeSetenv("ANDROID_ENTRYPOINT", p.dir + "/" + entry_point);
                 SDLActivity.nativeSetenv("ANDROID_ARGUMENT", p.dir);
                 SDLActivity.nativeSetenv("ANDROID_APP_PATH", p.dir);
+                Log.v(TAG, "onPostExecute() ANDROID_ENTRYPOINT is " + p.dir + "/" + entry_point);
+                Log.v(TAG, "onPostExecute() ANDROID_APP_PATH is " + p.dir);
 
                 if (p != null) {
                     if (p.landscape) {
@@ -308,6 +311,8 @@ public class PythonActivity extends SDLActivity {
                 SDLActivity.nativeSetenv("ANDROID_ENTRYPOINT", entry_point);
                 SDLActivity.nativeSetenv("ANDROID_ARGUMENT", app_root_dir);
                 SDLActivity.nativeSetenv("ANDROID_APP_PATH", app_root_dir);
+                Log.v(TAG, "onPostExecute() ANDROID_ENTRYPOINT is " + entry_point);
+                Log.v(TAG, "onPostExecute() ANDROID_APP_PATH is " + app_root_dir);
             }
 
             String mFilesDirectory = mActivity.getFilesDir().getAbsolutePath();
@@ -349,16 +354,19 @@ public class PythonActivity extends SDLActivity {
                     ))) {
                 // Because sometimes the app will get stuck here and never
                 // actually run, ensure that it gets launched if we're active:
+                Log.v(TAG, "onPostExecute() going to resume activity");
                 mActivity.onResume();
             }
         }
 
         @Override
         protected void onPreExecute() {
+            Log.v(TAG, "onPreExecute()");
         }
 
         @Override
         protected void onProgressUpdate(Void... values) {
+            Log.v(TAG, "onProgressUpdate()");
         }
     }
 
@@ -722,30 +730,41 @@ public class PythonActivity extends SDLActivity {
     }
 
     @Override
+    protected void onStart() {
+        Log.v(TAG, "onStart()");
+        try {
+            super.onStart();
+        } catch (Exception e) {
+            Log.v(TAG, "onStart() failed : " + e);
+        }
+    }
+
+    @Override
     protected void onStop() {
         Log.v(TAG, "onStop()");
+        //requestGetURL("http://localhost:8180/process/stop/v1");
         try {
             super.onStop();
-        } catch (UnsatisfiedLinkError e) {
-            Log.v(TAG, "onStop() failed");
+        } catch (Exception e) {
+            Log.v(TAG, "onStop() failed : " + e);
         }
     }
 
     @Override
     protected void onDestroy() {
         Log.v(TAG, "onDestroy()");
+        requestGetURL("http://localhost:8180/process/stop/v1");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             if (this.webView != null) {
                 Log.v(TAG, "onDestroy()   about to call webView.destroy()");
-                this.webView.destroy();
-                this.webView = null;
+                //this.webView.destroy();
+                //this.webView = null;
             }
         }
-        requestGetURL("http://localhost:8180/process/stop/v1");
         try {
             super.onDestroy();
-        } catch (UnsatisfiedLinkError e) {
-            Log.v(TAG, "onDestroy() failed");
+        } catch (Exception e) {
+            Log.v(TAG, "onDestroy() failed : " + e);
         }
     }
 
@@ -758,15 +777,14 @@ public class PythonActivity extends SDLActivity {
         }
         try {
             super.onPause();
-        } catch (UnsatisfiedLinkError e) {
-            Log.v(TAG, "onPause() failed");
-            // Catch pause while still in loading screen failing to
-            // call native function (since it's not yet loaded)
+        } catch (Exception e) {
+            Log.v(TAG, "onPause() failed : " + e);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             if (this.webView != null) {
-                this.webView.onPause();
-                this.webView.pauseTimers();
+                Log.v(TAG, "onPause()   about to call webView.onPause()");
+                //this.webView.onPause();
+                //this.webView.pauseTimers();
             }
         }
     }
@@ -780,15 +798,15 @@ public class PythonActivity extends SDLActivity {
         }
         try {
             super.onResume();
-        } catch (UnsatisfiedLinkError e) {
-            // Catch resume while still in loading screen failing to
-            // call native function (since it's not yet loaded)
+        } catch (Exception e) {
+            Log.v(TAG, "onResume() failed : " + e);
         }
         considerLoadingScreenRemoval();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             if (this.webView != null) {
-                this.webView.resumeTimers();
-                this.webView.onResume();
+                Log.v(TAG, "onResume()   about to call webView.resumeTimers()");
+                //this.webView.resumeTimers();
+                //this.webView.onResume();
             }
         }
     }
@@ -892,132 +910,58 @@ public class PythonActivity extends SDLActivity {
         @Override
         protected String doInBackground(String... urls) {
             Log.v(TAG, "HttpRequestGET.doInBackground() " + urls[0]);
-            String result;
+            String result = "";
             try {
                 URL url = new URL(urls[0]);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
+                urlConnection.setUseCaches(false);
+                urlConnection.setAllowUserInteraction(false);
+                urlConnection.setConnectTimeout(300);
+                urlConnection.setReadTimeout(300);
                 urlConnection.setRequestProperty("Content-Type", "application/json; utf-8");
+                urlConnection.setRequestProperty("Content-length", "0");
                 urlConnection.setRequestProperty("Accept", "application/json");
-                urlConnection.setDoOutput(true);
-        
-                String jsonInputString = "";
-                try(OutputStream outStream = urlConnection.getOutputStream()) {
-                    byte[] inp = jsonInputString.getBytes("utf-8");
-                    outStream.write(inp, 0, inp.length);
-                }
-        
-                try(BufferedReader br = new BufferedReader(
-                    new InputStreamReader(urlConnection.getInputStream(), "utf-8"))) {
-                        StringBuilder response = new StringBuilder();
-                        String responseLine = null;
-                        while ((responseLine = br.readLine()) != null) {
-                            response.append(responseLine.trim());
+                urlConnection.connect();
+                try {
+                    int responseCode = urlConnection.getResponseCode();
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "utf-8"));
+                        StringBuilder sb = new StringBuilder();
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            sb.append(line + "\n");
                         }
-                        result = response.toString();
-                        Log.v(TAG, "HttpRequestGET.doInBackground() response received");
-                } finally {
-                    urlConnection.disconnect();
+                        br.close();
+                        result = sb.toString();
+                    }
+                } catch (Exception exc) {
+                    Log.e(TAG, "HttpRequestGET.doInBackground() FAILED reading: " + exc);
                 }
-                return result;
+                urlConnection.disconnect();
             }
             catch (Exception exc) {
-                Log.e(TAG, "HttpRequestGET.doInBackground() failed: " + exc);
-                return "";
+                Log.e(TAG, "HttpRequestGET.doInBackground() FAILED connecting: " + exc);
             }
+            return result;
         }
 
         @Override
         protected void onPostExecute(String result) {
-            Log.v(TAG, "HttpRequestGET.onPostExecute() " + result);
+            Log.v(TAG, "HttpRequestGET.onPostExecute() OK");
         }
     }
 
-
     public String requestGetURL(String url_str) {
         Log.v(TAG, "requestGetURL() " + url_str);
-        new HttpRequestGET().execute(url_str);
-        return "";
+        String str_result = "";
+        try {
+            str_result = new HttpRequestGET().execute(url_str).get();
+        } catch (Exception exc) {
+            Log.e(TAG, "requestGetURL() FAILED : " + exc);
+        }
+        Log.v(TAG, "requestGetURL() result : " + str_result);
+        return str_result;
     }
-
-
-//    public String requestPostURL(String url_str) {
-//        Log.v(TAG, "requestPostURL() " + url_str);
-//        String result;
-//        try {
-//            URL url = new URL(url_str);
-//            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-//            urlConnection.setRequestMethod("POST");
-//            urlConnection.setRequestProperty("Content-Type", "application/json; utf-8");
-//            urlConnection.setRequestProperty("Accept", "application/json");
-//            urlConnection.setDoOutput(true);
-//    
-//            String jsonInputString = "{}";
-//            try(OutputStream outStream = urlConnection.getOutputStream()) {
-//                byte[] inp = jsonInputString.getBytes("utf-8");
-//                outStream.write(inp, 0, inp.length);
-//            }
-//    
-//            try(BufferedReader br = new BufferedReader(
-//                new InputStreamReader(urlConnection.getInputStream(), "utf-8"))) {
-//                    StringBuilder response = new StringBuilder();
-//                    String responseLine = null;
-//                    while ((responseLine = br.readLine()) != null) {
-//                        response.append(responseLine.trim());
-//                    }
-//                    result = response.toString();
-//                    Log.v(TAG, "requestPostURL() response received");
-//            } finally {
-//                urlConnection.disconnect();
-//            }
-//            Log.v(TAG, "requestPostURL() OK : " + result);
-//        } catch (Exception exc) {
-//            Log.e(TAG, "requestPostURL() failed : " + exc);
-//            return null;
-//        }
-//        return result;
-//    }
-
-//    public String requestGetURL(String url_str) {
-//        Log.v(TAG, "requestGetURL() " + url_str);
-//        final String[] result = {""};
-//        final String urll = url_str;
-//        runOnUiThread(new Runnable() {
-//            public void run() {
-//                try {
-//                    URL url = new URL(urll);
-//                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-//                    urlConnection.setRequestMethod("GET");
-//                    urlConnection.setRequestProperty("Content-Type", "application/json; utf-8");
-//                    urlConnection.setRequestProperty("Accept", "application/json");
-//                    urlConnection.setDoOutput(true);
-//            
-//                    String jsonInputString = "";
-//                    try(OutputStream outStream = urlConnection.getOutputStream()) {
-//                        byte[] inp = jsonInputString.getBytes("utf-8");
-//                        outStream.write(inp, 0, inp.length);
-//                    }
-//            
-//                    try(BufferedReader br = new BufferedReader(
-//                        new InputStreamReader(urlConnection.getInputStream(), "utf-8"))) {
-//                            StringBuilder response = new StringBuilder();
-//                            String responseLine = null;
-//                            while ((responseLine = br.readLine()) != null) {
-//                                response.append(responseLine.trim());
-//                            }
-//                            result[0] = response.toString();
-//                            Log.v(TAG, "requestGetURL() response received");
-//                    } finally {
-//                        urlConnection.disconnect();
-//                    }
-//                }
-//                catch (Exception exc) {
-//                    Log.e(TAG, "requestGetURL() failed: " + exc);
-//                }
-//            }
-//        });
-//        Log.v(TAG, "requestGetURL() OK : " + result[0]);
-//        return result[0];
-//    }
 
 }

@@ -166,9 +166,9 @@ public class PythonService extends Service implements Runnable {
             Log.v(TAG, "service restart requested");
             startService(startIntent);
         }
-        Log.v(TAG, "onDestroy() going to kill process " + Process.myPid());
-        Process.killProcess(Process.myPid());
-        Log.v(TAG, "onDestroy() process suppose tobe killed");
+        //Log.v(TAG, "onDestroy() going to kill process " + Process.myPid());
+        //Process.killProcess(Process.myPid());
+        //Log.v(TAG, "onDestroy() process suppose tobe killed");
     }
 
     /**
