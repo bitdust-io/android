@@ -75,6 +75,8 @@ clean:
 
 rewrite_dist_files:
 	@cp -r -v etc/PythonActivity.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/kivy/android/
+	@cp -r -v etc/PythonService.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/kivy/android/
+	@cp -r -v etc/SDLActivity.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/libsdl/app/
 	@cp -r -v etc/AndroidManifest.tmpl.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/templates/
 
 .build_incremental:
@@ -110,7 +112,13 @@ test_apk:
 	@adb install -r bin/BitDustAndroid.apk
 
 log_adb:
-	@adb logcat | grep -v extracting | grep -v "Checking pattern" | grep -v "Library loading" | grep -v "Loading library" | grep -v "AppleWebKit/537.36 (KHTML, like Gecko)" | grep -v "I Bitdustnode:   " | grep -v "I Bitdustnode: DEBUG:jnius.reflect:" | grep -e python -e Bitdustnode -e "E AndroidRuntime" -e "F DEBUG" -e "PythonActivity:" -e "WebViewConsole"
+	@adb logcat | grep -v "Notification.Badge:" | grep -v "GameManagerService:" | grep -v "GamePkgDataHelper:" | grep -v "Layer   :" | grep -v "SurfaceFlinger:" | grep -v "SurfaceControl:" | grep -v "RemoteAnimationController:" | grep -v "WindowManager:" | grep -v extracting | grep -v "Checking pattern" | grep -v "Library loading" | grep -v "Loading library" | grep -v "AppleWebKit/537.36 (KHTML, like Gecko)" | grep -v "I Bitdustnode:   " | grep -v "I Bitdustnode: DEBUG:jnius.reflect:" | grep -e python -e Bitdustnode -e "E AndroidRuntime" -e "F DEBUG" -e "PythonActivity:" -e "WebViewConsole:" -e "SDL     :" -e "PythonService:" -e "org.bitdust_io.bitdust1"
+
+log_adb_quick:
+	@adb logcat | grep -v "python  : extracting" | grep -v "pythonutil: Checking pattern" | grep -e python -e Bitdustnode -e "E AndroidRuntime" -e "F DEBUG" -e "PythonActivity:" -e "WebViewConsole:" -e "SDL     :" -e "PythonService:"
+
+log_adb_full:
+	@adb logcat
 
 log_main:
 	@adb shell tail -f /storage/emulated/0/.bitdust/logs/android.log

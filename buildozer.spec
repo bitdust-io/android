@@ -49,7 +49,7 @@ requirements = kivy,service_identity,pyparsing,appdirs,cffi,six,pycryptodome,att
 #garden_requirements = 
 
 # (str) Presplash of the application
-presplash.filename = bitdust.png
+presplash.filename = loading_logo.png
 
 # (str) Icon of the application
 icon.filename = bitdust.png
@@ -85,7 +85,7 @@ fullscreen = 0
 # red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
 # darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
 # olive, purple, silver, teal.
-android.presplash_color = #FFFFFF
+android.presplash_color = #81A6FF
 
 # (list) Permissions
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, FOREGROUND_SERVICE

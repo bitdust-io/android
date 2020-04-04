@@ -23,7 +23,7 @@ from jnius import autoclass  # @UnresolvedImport
 import encodings.idna
 
 PACKAGE_NAME = 'org.bitdust_io.bitdust1'
-SERVICE_STARTED_MARKER_FILENAME = f'/data/user/0/{PACKAGE_NAME}/local_web_server'
+# SERVICE_STARTED_MARKER_FILENAME = f'/data/user/0/{PACKAGE_NAME}/local_web_server'
 
 # BitDustActivity = autoclass('org.bitdust_io.bitdust.BitDustActivity')
 PythonActivity = autoclass('org.kivy.android.PythonActivity')
@@ -49,7 +49,7 @@ def set_foreground():
     title = AndroidString("BitDust".encode('utf-8'))
     message = AndroidString("Application is running in background".encode('utf-8'))
     notification_intent = Intent(app_context, PythonActivity)
-    notification_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK)
+    notification_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY)
     notification_intent.setAction(Intent.ACTION_MAIN)
     notification_intent.addCategory(Intent.CATEGORY_LAUNCHER)
     intent = PendingIntent.getActivity(service, 0, notification_intent, 0)
@@ -77,21 +77,39 @@ def start_bitdust():
         pass
     print('executable_path after : %r' % os.getcwd())
     from main.bpmain import main
-    reactor.callLater(0.01, main, executable_path, start_reactor=False)  # @UndefinedVariable
+    # reactor.callLater(0, main, executable_path, start_reactor=False)  # @UndefinedVariable
+    main(executable_path, start_reactor=False)
+    return True
+
+
+def stop_bitdust():
+    executable_path = os.getcwd()
+    print('stop_bitdust executable_path=%r' % executable_path)
+    try:
+        os.chdir('bitdust')
+    except:
+        pass
+    print('executable_path after : %r' % os.getcwd())
+    from main import shutdowner
+    # reactor.callLater(0, shutdowner.A, 'stop', 'exit')  # @UndefinedVariable
+    shutdowner.A('stop', 'exit')
     return True
 
 
 def start_web_server(web_port_number=8888):
+    """
+    Not in use.
+    """
     resource = File(f'/data/user/0/{PACKAGE_NAME}/files/app/www/')
     factory = Site(resource)
     endpoint = endpoints.TCP4ServerEndpoint(reactor, web_port_number)
     endpoint.listen(factory)
-    fout = open(SERVICE_STARTED_MARKER_FILENAME, 'w')
-    fout.write('localhost %d' % web_port_number)
-    fout.flush()
-    os.fsync(fout.fileno())
-    fout.close()
-    print('start_web_server file written', SERVICE_STARTED_MARKER_FILENAME)
+    # fout = open(SERVICE_STARTED_MARKER_FILENAME, 'w')
+    # fout.write('localhost %d' % web_port_number)
+    # fout.flush()
+    # os.fsync(fout.fileno())
+    # fout.close()
+    # print('start_web_server file written', SERVICE_STARTED_MARKER_FILENAME)
     return endpoint
 
 
@@ -99,10 +117,11 @@ def run_service():
     argument = os.environ.get('PYTHON_SERVICE_ARGUMENT', 'null')
     argument = json.loads(argument) if argument else None
     argument = {} if argument is None else argument
-    print('argument %r' % argument)
+    print('run_service() argument : %r' % argument)
 
     if argument.get('stop_service'):
-        print('service to be stopped')
+        print('run_service() service to be stopped now')
+        stop_bitdust()
         return
 
     try:
@@ -112,11 +131,11 @@ def run_service():
         reactor.callWhenRunning(start_bitdust)  # @UndefinedVariable
         reactor.run()  # @UndefinedVariable
 
-        print('Twisted reactor stopped')
+        print('run_service() Twisted reactor stopped')
 
-        if os.path.isfile(SERVICE_STARTED_MARKER_FILENAME):
-            os.remove(SERVICE_STARTED_MARKER_FILENAME)
-            print('file erased:', SERVICE_STARTED_MARKER_FILENAME)
+        # if os.path.isfile(SERVICE_STARTED_MARKER_FILENAME):
+        #     os.remove(SERVICE_STARTED_MARKER_FILENAME)
+        #     print('run_service() file erased:', SERVICE_STARTED_MARKER_FILENAME)
 
     except Exception as exc:
         print('Exception in run_service() : %r' % exc)
