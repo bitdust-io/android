@@ -118,7 +118,7 @@ public class PythonActivity extends SDLActivity {
         this.webView.setWebContentsDebuggingEnabled(true);
         this.webView.setWebViewClient(new WebViewClient());
         this.webView.setWebChromeClient(new MyWebChromeClient());
-        this.webView.requestFocus(View.FOCUS_DOWN);
+        // this.webView.requestFocus(View.FOCUS_DOWN);
         //if SDK version is greater of 19 then activate hardware acceleration otherwise activate software acceleration
         if (Build.VERSION.SDK_INT >= 19) {
             this.webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
