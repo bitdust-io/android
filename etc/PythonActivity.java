@@ -44,7 +44,6 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.os.Process;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -126,21 +125,6 @@ public class PythonActivity extends SDLActivity {
         } else if (Build.VERSION.SDK_INT >= 11 && Build.VERSION.SDK_INT < 19) {
             this.webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-
-        this.webView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                    case MotionEvent.ACTION_UP:
-                        view.requestFocusFromTouch();  
-                        break;
-                }               
-                return false;
-            }
-
-        });
-
         this.addContentView(this.webView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 

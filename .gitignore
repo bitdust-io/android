@@ -16,3 +16,4 @@ python-for-android/
 .release_incremental
 src/bitdust
 src/www
+src/version.py
