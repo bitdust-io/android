@@ -209,12 +209,6 @@ public class PythonActivity extends SDLActivity {
 
     public class MyWebViewClient extends WebViewClient {
 
-        @Override  
-        public boolean shouldOverrideUrlLoading(WebView view, String url)  
-        {
-           view.loadUrl(url);
-           return false;
-        }
     }
 
     public void loadLibraries() {
