@@ -44,6 +44,7 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.os.Process;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -118,12 +119,28 @@ public class PythonActivity extends SDLActivity {
         this.webView.setWebContentsDebuggingEnabled(true);
         this.webView.setWebViewClient(new WebViewClient());
         this.webView.setWebChromeClient(new MyWebChromeClient());
+        this.webView.requestFocus(View.FOCUS_DOWN);
         //if SDK version is greater of 19 then activate hardware acceleration otherwise activate software acceleration
         if (Build.VERSION.SDK_INT >= 19) {
             this.webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         } else if (Build.VERSION.SDK_INT >= 11 && Build.VERSION.SDK_INT < 19) {
             this.webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
+
+        this.webView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_UP:
+                        view.requestFocusFromTouch();  
+                        break;
+                }               
+                return false;
+            }
+
+        });
+
         this.addContentView(this.webView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
@@ -208,6 +225,12 @@ public class PythonActivity extends SDLActivity {
 
     public class MyWebViewClient extends WebViewClient {
 
+        @Override  
+        public boolean shouldOverrideUrlLoading(WebView view, String url)  
+        {
+           view.loadUrl(url);
+           return false;
+        }
     }
 
     public void loadLibraries() {
