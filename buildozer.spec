@@ -77,6 +77,9 @@ osx.kivy_version = 1.11.0
 # Android specific
 #
 
+# (str) Android app theme, default is ok for Kivy-based app
+android.apptheme = "@android:style/Theme.Black.NoTitleBar"
+
 # (bool) Indicate if the application should be fullscreen or not
 fullscreen = 0
 
