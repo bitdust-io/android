@@ -167,6 +167,8 @@ android.add_src = java_classes/*.java
 # (list) Java classes to add as activities to the manifest.
 #android.add_activites = com.example.ExampleActivity
 
+android.activity_launch_mode = singleTask
+
 # (str) OUYA Console category. Should be one of GAME or APP
 # If you leave this blank, OUYA support will not be enabled
 #android.ouya.category = GAME
