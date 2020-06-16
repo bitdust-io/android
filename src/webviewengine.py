@@ -54,4 +54,4 @@ class WebviewEngine(Widget, EventDispatcher):
             return True
         PythonActivity.mActivity.createWebView()
         self._webview_obj = PythonActivity.mActivity.webView
-        self._webview_obj.loadUrl(f'file:///data/user/0/{PACKAGE_NAME}/files/app/www/index.html')
+        # self._webview_obj.loadUrl(f'file:///data/user/0/{PACKAGE_NAME}/files/app/www/index.html')

@@ -208,38 +208,38 @@ public class BitDustActivity extends PythonActivity {
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        Log.v(TAG, "onActivityResult()");
-        if (requestCode == INPUT_FILE_REQUEST_CODE && mUploadMessage != null) {
-            parseSelectedFilePath(resultCode, intent);
-            return;
-        }
-        super.onActivityResult(requestCode, resultCode, intent);
-        return;
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+//        Log.v(TAG, "onActivityResult()");
+//        if (requestCode == INPUT_FILE_REQUEST_CODE && mUploadMessage != null) {
+//            parseSelectedFilePath(resultCode, intent);
+//            return;
+//        }
+//        super.onActivityResult(requestCode, resultCode, intent);
+//        return;
+//    }
 
 
-    @Override
-    protected void onDestroy() {
-        Log.v(TAG, "onDestroy()");
-        String process_stop_result = requestGetURL("http://localhost:8180/process/stop/v1");
-        Log.v(TAG, "onDestroy() process_stop_result : " + process_stop_result);
-        String process_health_result = "ok";
-        while (process_health_result != "") {
-            process_health_result = requestGetURL("http://localhost:8180/process/health/v1");
-            Log.v(TAG, "onDestroy() process_health_result : " + process_health_result);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (this.webView != null) {
-                Log.v(TAG, "onDestroy()   about to call webView.destroy()");
-                this.webView.destroy();
-                this.webView = null;
-            }
-        }
-        Log.v(TAG, "onDestroy()   about to call super onDestroy");
-        super.onDestroy();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        Log.v(TAG, "onDestroy()");
+//        String process_stop_result = requestGetURL("http://localhost:8180/process/stop/v1");
+//        Log.v(TAG, "onDestroy() process_stop_result : " + process_stop_result);
+//        String process_health_result = "ok";
+//        while (process_health_result != "") {
+//            process_health_result = requestGetURL("http://localhost:8180/process/health/v1");
+//            Log.v(TAG, "onDestroy() process_health_result : " + process_health_result);
+//        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//            if (this.webView != null) {
+//                Log.v(TAG, "onDestroy()   about to call webView.destroy()");
+//                this.webView.destroy();
+//                this.webView = null;
+//            }
+//        }
+//        Log.v(TAG, "onDestroy()   about to call super onDestroy");
+//        super.onDestroy();
+//    }
 
 
 //    @Override
