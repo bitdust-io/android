@@ -30,8 +30,8 @@ APP_STARTUP_PERMISSIONS = [
 ]
 
 
-# BitDustActivity = autoclass('org.bitdust_io.bitdust.BitDustActivity')
-PythonActivity = autoclass('org.kivy.android.PythonActivity')
+# PythonActivity = autoclass('org.kivy.android.PythonActivity')
+PythonActivity = autoclass('org.bitdust_io.bitdust1.BitDustActivity')
 
 
 class BitDustApp(App):

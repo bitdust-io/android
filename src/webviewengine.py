@@ -10,8 +10,8 @@ View = autoclass('android.view.View')
 Uri = autoclass('android.net.Uri')
 Array = autoclass('java.lang.reflect.Array')
 
-PythonActivity = autoclass('org.kivy.android.PythonActivity')
-# BitDustActivity = autoclass('org.bitdust_io.bitdust.BitDustActivity')
+# PythonActivity = autoclass('org.kivy.android.PythonActivity')
+PythonActivity = autoclass('org.bitdust_io.bitdust1.BitDustActivity')
 
 
 PACKAGE_NAME = 'org.bitdust_io.bitdust1'

@@ -25,8 +25,8 @@ import encodings.idna
 PACKAGE_NAME = 'org.bitdust_io.bitdust1'
 # SERVICE_STARTED_MARKER_FILENAME = f'/data/user/0/{PACKAGE_NAME}/local_web_server'
 
-# BitDustActivity = autoclass('org.bitdust_io.bitdust.BitDustActivity')
-PythonActivity = autoclass('org.kivy.android.PythonActivity')
+# PythonActivity = autoclass('org.kivy.android.PythonActivity')
+PythonActivity = autoclass('org.bitdust_io.bitdust1.BitDustActivity')
 
 
 def set_foreground():
@@ -41,7 +41,8 @@ def set_foreground():
     NotificationChannel = autoclass(u'android.app.NotificationChannel')
     notification_channel = NotificationChannel(channel_id, AndroidString('BitDust Channel'.encode('utf-8')), NotificationManager.IMPORTANCE_HIGH)
     Notification = autoclass(u'android.app.Notification')
-    service = autoclass('org.kivy.android.PythonService').mService
+    # service = autoclass('org.kivy.android.PythonService').mService
+    service = autoclass('org.bitdust_io.bitdust1.BitDustService').mService
     notification_service = service.getSystemService(Context.NOTIFICATION_SERVICE)
     notification_service.createNotificationChannel(notification_channel)
     app_context = service.getApplication().getApplicationContext()

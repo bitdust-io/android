@@ -152,7 +152,7 @@ android.accept_sdk_license = True
 
 # (list) List of Java files to add to the android project (can be java or a
 # directory containing the files)
-android.add_src = java_classes/*.java
+android.add_src = java_classes/
 
 # (list) Android AAR archives to add (currently works only with sdl2_gradle
 # bootstrap)

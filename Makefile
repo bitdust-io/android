@@ -60,7 +60,7 @@ install_p4a:
 	@cp -r -v etc/AndroidManifest.tmpl.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/templates/
 	@mkdir -p ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/res/xml/
 	@cp -r -v etc/res/xml/network_security_config.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/res/xml/
-	@cp -r etc/PythonActivity.java ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/java/org/kivy/android/
+	# @cp -r etc/PythonActivity.java ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/java/org/kivy/android/
 
 update_engine_repo:
 	@cd ../bitdust; git fetch --all; git reset --hard origin/master; cd ../bitdust.android;
@@ -74,9 +74,9 @@ clean:
 	@rm -rf .buildozer
 
 rewrite_dist_files:
-	@cp -r -v etc/PythonActivity.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/kivy/android/
-	@cp -r -v etc/PythonService.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/kivy/android/
-	@cp -r -v etc/SDLActivity.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/libsdl/app/
+	# @cp -r -v etc/PythonActivity.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/kivy/android/
+	# @cp -r -v etc/PythonService.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/kivy/android/
+	# @cp -r -v etc/SDLActivity.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/libsdl/app/
 	@cp -r -v etc/AndroidManifest.tmpl.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/templates/
 
 .build_incremental:
