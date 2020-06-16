@@ -8,14 +8,15 @@ import java.net.HttpURLConnection;
 
 import android.os.Process;
 import android.os.AsyncTask;
+import android.util.Log;
 
-import org.kivy.android.PythonActivity;
+import org.kivy.android.PythonService;
 import org.kivy.android.PythonUtil;
 
 import org.renpy.android.Hardware;
 
 
-public class BitDustService extends PythonActivity {
+public class BitDustService extends PythonService {
 
     private static final String TAG = "BitDustService";
 
@@ -31,20 +32,7 @@ public class BitDustService extends PythonActivity {
             process_health_result = requestGetURL("http://localhost:8180/process/health/v1");
             Log.v(TAG, "onDestroy() process_health_result : " + process_health_result);
         }
-        try {
-            super.onDestroy();
-            Log.v(TAG, "onDestroy() super onDestroy finished");
-        } catch (Exception exc) {
-            Log.e(TAG, "onDestroy() super onDestroy failed : " + exc);
-        }
-        pythonThread = null;
-        if (autoRestartService && startIntent != null) {
-            Log.v(TAG, "service restart requested");
-            startService(startIntent);
-        }
-        Log.v(TAG, "onDestroy() going to kill process " + Process.myPid());
-        Process.killProcess(Process.myPid());
-        Log.v(TAG, "onDestroy() process finished correctly");
+        super.onDestroy();
     }
 
 

@@ -65,6 +65,7 @@ import android.webkit.WebViewClient;
 import org.libsdl.app.SDL;
 import org.libsdl.app.SDLActivity;
 
+import org.kivy.android.PythonActivity;
 import org.kivy.android.PythonUtil;
 import org.kivy.android.launcher.Project;
 
@@ -72,7 +73,9 @@ import org.renpy.android.ResourceManager;
 import org.renpy.android.AssetExtract;
 
 
-public class BitDustService extends PythonActivity {
+public class BitDustActivity extends PythonActivity {
+
+    private static final String TAG = "BitDustActivity";
 
     private static boolean appliedWindowedModeHack = false;
     private static final int INPUT_FILE_REQUEST_CODE = 10001;
@@ -212,7 +215,8 @@ public class BitDustService extends PythonActivity {
             parseSelectedFilePath(resultCode, intent);
             return;
         }
-        return super.onActivityResult(requestCode, resultCode, intent);
+        super.onActivityResult(requestCode, resultCode, intent);
+        return;
     }
 
 
@@ -234,43 +238,35 @@ public class BitDustService extends PythonActivity {
             }
         }
         Log.v(TAG, "onDestroy()   about to call super onDestroy");
-        try {
-            super.onDestroy();
-        } catch (Exception e) {
-            Log.v(TAG, "onDestroy() super onDestroy failed : " + e);
-        }
-        Log.v(TAG, "onDestroy() success");
-        Log.v(TAG, "onDestroy() going to kill process " + Process.myPid());
-        Process.killProcess(Process.myPid());
-        Log.v(TAG, "onDestroy() process suppose tobe killed");
+        super.onDestroy();
     }
 
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (this.webView != null) {
-                Log.v(TAG, "onPause()   about to call webView.onPause()");
-                this.webView.onPause();
-                this.webView.pauseTimers();
-            }
-        }
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//            if (this.webView != null) {
+//                Log.v(TAG, "onPause()   about to call webView.onPause()");
+//                this.webView.onPause();
+//                this.webView.pauseTimers();
+//            }
+//        }
+//    }
 
 
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//            if (this.webView != null) {
+//                Log.v(TAG, "onResume()   about to call webView.resumeTimers()");
+//                this.webView.resumeTimers();
+//                this.webView.onResume();
+//            }
+//        }
+//    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (this.webView != null) {
-                Log.v(TAG, "onResume()   about to call webView.resumeTimers()");
-                this.webView.resumeTimers();
-                this.webView.onResume();
-            }
-        }
-    }
 
     private class HttpRequestGET extends AsyncTask<String, Void, String> {
         @Override
