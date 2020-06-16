@@ -89,7 +89,7 @@ public class BitDustActivity extends PythonActivity {
         try {
             this.webView = new WebView(this);
             webSettings = this.webView.getSettings();
-            webSettings.setJavaScriptEnabled(true);
+            webSettings.setJavaScriptEnabled(false);
             webSettings.setUseWideViewPort(true);
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setAllowFileAccess(true);
