@@ -30,13 +30,21 @@ Now clone BitDust Android repository in same folder and create sym-links to othe
 #### Ubuntu 18.04 Desktop
 
 	make install_dependencies_ubuntu
-	make install_buildozer_ubuntu
+
 
 
 #### MacOS Mojave
 
+(most probably not working at the moment)
+
 	make install_dependencies_macos
-	make install_buildozer_macos
+
+
+
+#### Install Buildozer
+
+	make install_buildozer
+
 
 
 #### Install python-for-android
@@ -79,6 +87,7 @@ This way Google will be able to verify the .APK file you built before publish it
 #### Ubuntu 18.04 Desktop
 
 	./release_ubuntu.sh 1.0.5
+
 
 
 #### MacOS Mojave
