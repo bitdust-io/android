@@ -84,19 +84,15 @@ public class PythonActivity extends SDLActivity {
     private WebSettings webSettings = null;
     private ValueCallback<Uri[]> mUploadMessage = null;
 
-    public String getAppRoot() {
-        String app_root =  getFilesDir().getAbsolutePath() + "/app";
-        return app_root;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG, "onCreate() running");
-        resourceManager = new ResourceManager(this);
-
+        Log.v(TAG, "onCreate()");
         Log.v(TAG, "About to do super onCreate");
         super.onCreate(savedInstanceState);
         Log.v(TAG, "Did super onCreate");
+
+        resourceManager = new ResourceManager(this);
 
         this.mActivity = this;
         this.showLoadingScreen();
@@ -135,6 +131,11 @@ public class PythonActivity extends SDLActivity {
         } catch (Exception exc) {
             Log.e(TAG, "Failed creating WebView: " + exc);
         }
+    }
+
+    public String getAppRoot() {
+        String app_root =  getFilesDir().getAbsolutePath() + "/app";
+        return app_root;
     }
 
     public String getImagePath(Uri uri) {
@@ -259,9 +260,8 @@ public class PythonActivity extends SDLActivity {
         @Override
         protected String doInBackground(String... params) {
             File app_root_file = new File(params[0]);
-            Log.v(TAG, "Ready to unpack");
-            PythonActivityUtil pythonActivityUtil = new PythonActivityUtil(mActivity, resourceManager);
-            pythonActivityUtil.unpackData("private", app_root_file);
+            Log.v(TAG, "doInBackground(): Ready to unpack");
+            unpackData("private", app_root_file);
             return null;
         }
 
@@ -589,12 +589,12 @@ public class PythonActivity extends SDLActivity {
     // Overridden since it's called often, to check whether to remove the
     // loading screen:
     @Override
-    public boolean sendCommand(int command, Object data) {
+    protected boolean sendCommand(int command, Object data) {
         boolean result = super.sendCommand(command, data);
         considerLoadingScreenRemoval();
         return result;
     }
-
+   
     /** Confirm that the app's main routine has been launched.
      **/
     @Override
@@ -795,9 +795,6 @@ public class PythonActivity extends SDLActivity {
         }
         try {
             super.onPause();
-        } catch (UnsatisfiedLinkError e) {
-            // Catch pause while still in loading screen failing to
-            // call native function (since it's not yet loaded)
         } catch (Exception e) {
             Log.v(TAG, "onPause() failed : " + e);
         }
@@ -819,9 +816,6 @@ public class PythonActivity extends SDLActivity {
         }
         try {
             super.onResume();
-        } catch (UnsatisfiedLinkError e) {
-            // Catch resume while still in loading screen failing to
-            // call native function (since it's not yet loaded)
         } catch (Exception e) {
             Log.v(TAG, "onResume() failed : " + e);
         }
@@ -903,12 +897,12 @@ public class PythonActivity extends SDLActivity {
      **/
     public boolean checkCurrentPermission(String permission) {
         Log.v(TAG, "checkCurrentPermission()");
-        if (android.os.Build.VERSION.SDK_INT < 23)
+        if (Build.VERSION.SDK_INT < 23)
             return true;
 
         try {
             java.lang.reflect.Method methodCheckPermission =
-                Activity.class.getMethod("checkSelfPermission", String.class);
+                Activity.class.getMethod("checkSelfPermission", java.lang.String.class);
             Object resultObj = methodCheckPermission.invoke(this, permission);
             int result = Integer.parseInt(resultObj.toString());
             if (result == PackageManager.PERMISSION_GRANTED) 
@@ -924,12 +918,12 @@ public class PythonActivity extends SDLActivity {
      **/
     public void requestPermissionsWithRequestCode(String[] permissions, int requestCode) {
         Log.v(TAG, "requestPermissionsWithRequestCode()");
-        if (android.os.Build.VERSION.SDK_INT < 23)
+        if (Build.VERSION.SDK_INT < 23)
             return;
         try {
             java.lang.reflect.Method methodRequestPermission =
                 Activity.class.getMethod("requestPermissions",
-                String[].class, int.class);
+                java.lang.String[].class, int.class);
             methodRequestPermission.invoke(this, permissions, requestCode);
         } catch (IllegalAccessException | NoSuchMethodException |
                  InvocationTargetException e) {
