@@ -56,7 +56,7 @@ install_buildozer_macos:
 
 install_p4a:
 	@rm -rf python-for-android/
-	@git clone --single-branch --branch develop https://github.com/kivy/python-for-android.git
+	@git clone --single-branch --branch release-2019.10.06 https://github.com/kivy/python-for-android.git
 	@cp -r -v etc/AndroidManifest.tmpl.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/templates/
 	@mkdir -p ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/res/xml/
 	@cp -r -v etc/res/xml/network_security_config.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/res/xml/
