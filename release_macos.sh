@@ -25,6 +25,6 @@ mv -v -f buildozer.spec.bk buildozer.spec
 
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ~/keystores/bitdust.keystore bin/BitDustAndroid_unsigned.apk bitdust
 
-~/.buildozer/android/platform/android-sdk/build-tools/29.0.2/zipalign -v 4 ./bin/BitDustAndroid_unsigned.apk  ./bin/BitDustAndroid.apk
+~/.buildozer/android/platform/android-sdk/build-tools/*/zipalign -v 4 ./bin/BitDustAndroid_unsigned.apk  ./bin/BitDustAndroid.apk
 
 echo "SUCCESS !!!"

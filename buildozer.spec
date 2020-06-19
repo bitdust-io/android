@@ -36,7 +36,7 @@ version.filename = %(source.dir)s/version.py
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy,
-requirements = kivy,service_identity,pyparsing,appdirs,cffi,six,pycryptodome,attrs,hyperlink,idna,cryptography,automat,android,twisted==20.3.0,python3
+requirements = kivy,service_identity,pyparsing,appdirs,cffi,six,pycryptodome,attrs,hyperlink,idna,cryptography,automat,android,twisted==20.3.0,python
 # requirements = incremental,kivy
 # there is an issue with incremental/twisted build... first you need to build only incremental and then twisted in second run
 
@@ -68,7 +68,7 @@ services = Bitdustnode:./service/main.py
 # author = © Copyright Info
 
 # change the major version of python used by the app
-osx.python_version = 3
+osx.python_version = 2
 
 # Kivy version to use
 osx.kivy_version = 1.11.0
@@ -94,20 +94,20 @@ android.presplash_color = #81A6FF
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, FOREGROUND_SERVICE
 
 # (int) Target Android API, should be as high as possible.
-android.api = 28
+android.api = 26
 
 # (int) Minimum API your APK will support.
-# android.minapi = 28
+android.minapi = 26
 
 # (int) Android SDK version to use
 # android.sdk = 20
 
 # (str) Android NDK version to use
 # android.ndk = 17c
-android.ndk = 20b
+android.ndk = 19c
 
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
-# android.ndk_api = 21
+android.ndk_api = 26
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 # android.private_storage = True
