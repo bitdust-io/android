@@ -36,7 +36,7 @@ version.filename = %(source.dir)s/version.py
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy,
-requirements = kivy,service_identity,pyparsing,appdirs,cffi,six,pycryptodome,attrs,hyperlink,idna,cryptography,automat,android,twisted==20.3.0,python3==3.6.9
+requirements = kivy,service_identity,pyparsing,appdirs,cffi,six,pycryptodome,attrs,hyperlink,idna,cryptography,automat,android,twisted==20.3.0,python3
 # requirements = incremental,kivy
 # there is an issue with incremental/twisted build... first you need to build only incremental and then twisted in second run
 
@@ -71,14 +71,15 @@ services = Bitdustnode:./service/main.py
 osx.python_version = 3
 
 # Kivy version to use
-osx.kivy_version = 1.11.0
+osx.kivy_version = 1.11.1
 
 #
 # Android specific
 #
 
 # (str) Android app theme, default is ok for Kivy-based app
-# android.apptheme = "@android:style/Theme.Black.NoTitleBar"
+android.apptheme = "@android:style/Theme.Black.NoTitleBar"
+# android.apptheme = "@android:style/Theme.NoTitleBar"
 
 # (bool) Indicate if the application should be fullscreen or not
 fullscreen = 0
@@ -94,20 +95,20 @@ android.presplash_color = #81A6FF
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, FOREGROUND_SERVICE
 
 # (int) Target Android API, should be as high as possible.
-android.api = 26
+# android.api = 28
 
 # (int) Minimum API your APK will support.
-android.minapi = 26
+# android.minapi = 28
 
 # (int) Android SDK version to use
 # android.sdk = 20
 
 # (str) Android NDK version to use
 # android.ndk = 17c
-android.ndk = 19c
+# android.ndk = 19c
 
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
-android.ndk_api = 26
+# android.ndk_api = 28
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 # android.private_storage = True
@@ -220,7 +221,7 @@ android.arch = arm64-v8a
 #p4a.fork = kivy
 
 # (str) python-for-android branch to use, defaults to master
-p4a.branch = develop
+p4a.branch = master
 # master
 # v2019.08.09
 
