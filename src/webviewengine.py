@@ -10,8 +10,8 @@ View = autoclass('android.view.View')
 Uri = autoclass('android.net.Uri')
 Array = autoclass('java.lang.reflect.Array')
 
-# PythonActivity = autoclass('org.kivy.android.PythonActivity')
-PythonActivity = autoclass('org.bitdust_io.bitdust1.BitDustActivity')
+PythonActivity = autoclass('org.kivy.android.PythonActivity')
+# PythonActivity = autoclass('org.bitdust_io.bitdust1.BitDustActivity')
 
 
 PACKAGE_NAME = 'org.bitdust_io.bitdust1'
@@ -48,10 +48,18 @@ class WebviewEngine(Widget, EventDispatcher):
 
     @run_on_ui_thread
     def create_webview(self, *args):
-        print('WebviewEngine.create_webview', args, PythonActivity.mActivity, PythonActivity)
+        print('WebviewEngine.create_webview', args)
         if(self._webview_obj):
             print('WebviewEngine.create_webview _webview_obj already exist: %r' % self._webview_obj)
             return True
-        PythonActivity.mActivity.createWebView()
-        self._webview_obj = PythonActivity.mActivity.webView
-        # self._webview_obj.loadUrl(f'file:///data/user/0/{PACKAGE_NAME}/files/app/www/index.html')
+
+        WebViewManager = autoclass('org.bitdust_io.bitdust1.WebViewManager')
+        print('WebviewEngine.create_webview', WebViewManager)
+        wvm = WebViewManager()
+        print('WebviewEngine.create_webview', wvm)
+        wvm.createWebView(PythonActivity.mActivity)
+        print('WebviewEngine.create_webview OK')
+        self._webview_obj = wvm.webView
+        print('WebviewEngine.create_webview', self._webview_obj)
+
+        self._webview_obj.loadUrl(f'file:///data/user/0/{PACKAGE_NAME}/files/app/www/index.html')

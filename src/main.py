@@ -30,8 +30,8 @@ APP_STARTUP_PERMISSIONS = [
 ]
 
 
-# PythonActivity = autoclass('org.kivy.android.PythonActivity')
-PythonActivity = autoclass('org.bitdust_io.bitdust1.BitDustActivity')
+PythonActivity = autoclass('org.kivy.android.PythonActivity')
+# PythonActivity = autoclass('org.bitdust_io.bitdust1.BitDustActivity')
 
 
 class BitDustApp(App):
@@ -88,7 +88,7 @@ class BitDustApp(App):
     def on_start(self):
         print('BitDustApp.on_start')
         self.request_app_permissions()
-        # self.create_notification_channel()
+        self.create_notification_channel()
         self.start_service()
 
     def on_stop(self):
@@ -117,6 +117,7 @@ class BitDustApp(App):
             argument = '{"stop_service": 1}'
         print('BitDustApp.start_service: %r' % type(service))
         service.start(mActivity, argument)
+        print('BitDustApp.start_service OK')
         if finishing:
             self.service = None
             print('BitDustApp.start_service expect to be STOPPED now')

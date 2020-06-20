@@ -73,9 +73,9 @@ import org.renpy.android.ResourceManager;
 import org.renpy.android.AssetExtract;
 
 
-public class BitDustActivity extends PythonActivity {
+public class WebViewManager {
 
-    private static final String TAG = "BitDustActivity";
+    private static final String TAG = "WebViewManager";
 
     private static boolean appliedWindowedModeHack = false;
     private static final int INPUT_FILE_REQUEST_CODE = 10001;
@@ -83,13 +83,14 @@ public class BitDustActivity extends PythonActivity {
     private WebSettings webSettings = null;
     private ValueCallback<Uri[]> mUploadMessage = null;
 
-
-    public void createWebView() {
+    public void createWebView(Activity activity) {
         Log.v(TAG, "createWebView()");
         try {
-            this.webView = new WebView(this);
+            this.webView = new WebView(activity);
+            Log.v(TAG, "createWebView() 1");
             webSettings = this.webView.getSettings();
-            webSettings.setJavaScriptEnabled(false);
+            Log.v(TAG, "createWebView() 2");
+            webSettings.setJavaScriptEnabled(true);
             webSettings.setUseWideViewPort(true);
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setAllowFileAccess(true);
@@ -100,8 +101,11 @@ public class BitDustActivity extends PythonActivity {
             webSettings.setBuiltInZoomControls(false);
             webSettings.setAppCacheEnabled(false);
             this.webView.setWebContentsDebuggingEnabled(true);
-            this.webView.setWebViewClient(new WebViewClient());
+            Log.v(TAG, "createWebView() 3");
+            this.webView.setWebViewClient(new MyWebViewClient());
+            Log.v(TAG, "createWebView() 4");
             this.webView.setWebChromeClient(new MyWebChromeClient());
+            Log.v(TAG, "createWebView() 5");
             // this.webView.requestFocus(View.FOCUS_DOWN);
             //if SDK version is greater of 19 then activate hardware acceleration otherwise activate software acceleration
             if (Build.VERSION.SDK_INT >= 19) {
@@ -109,7 +113,8 @@ public class BitDustActivity extends PythonActivity {
             } else if (Build.VERSION.SDK_INT >= 11 && Build.VERSION.SDK_INT < 19) {
                 this.webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             }
-            this.addContentView(this.webView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            Log.v(TAG, "createWebView() 6");
+            activity.addContentView(this.webView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             Log.v(TAG, "createWebView() ok");
         } catch (Exception exc) {
             Log.e(TAG, "Failed creating WebView: " + exc);
@@ -117,74 +122,74 @@ public class BitDustActivity extends PythonActivity {
     }
 
 
-    public String getImagePath(Uri uri) {
-        Log.v(TAG, "getImagePath()");
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        String document_id = cursor.getString(0);
-        document_id = document_id.substring(document_id.lastIndexOf(":")+1);
-        cursor.close();
-        cursor = getContentResolver().query(
-            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            null,
-            MediaStore.Images.Media._ID + " = ? ",
-            new String[]{document_id},
-            null
-        );
-        cursor.moveToFirst();
-        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-        cursor.close();
-        return path;
-    }
+//    public String getImagePath(Uri uri) {
+//        Log.v(TAG, "getImagePath()");
+//        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+//        cursor.moveToFirst();
+//        String document_id = cursor.getString(0);
+//        document_id = document_id.substring(document_id.lastIndexOf(":")+1);
+//        cursor.close();
+//        cursor = getContentResolver().query(
+//            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//            null,
+//            MediaStore.Images.Media._ID + " = ? ",
+//            new String[]{document_id},
+//            null
+//        );
+//        cursor.moveToFirst();
+//        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+//        cursor.close();
+//        return path;
+//    }
 
 
-    protected void parseSelectedFilePath(int resultCode, Intent intent) {
-        Log.v(TAG, "parseSelectedFilePath()");
-        Uri[] results = null;
-        if (resultCode == RESULT_OK && intent != null) {
-            Log.v(TAG, "PythonActivity is running parseSelectedFilePath for " + intent.getData());
-            results  = new Uri[1];
-            try {
-                String full_path = getImagePath(intent.getData());
-                String encoded_path = URLEncoder.encode(full_path, "UTF-8");
-                File fake_file = new File("file:///" + encoded_path);
-                results[0] = Uri.fromFile(fake_file);
-                Log.v(TAG, "PythonActivity parseSelectedFilePath : " + results[0].toString());
-            } catch (UnsupportedEncodingException exc) {
-                Log.e(TAG, "PythonActivity parseSelectedFilePath error encoding file path");
-            }
-        }
-        else {
-            Log.v(TAG, "PythonActivity is running parseSelectedFilePath return EMPTY LIST: resultCode=" + resultCode + " intent=" + intent);
-        }
-        mUploadMessage.onReceiveValue(results);
-        mUploadMessage = null;
-    }
+//    protected void parseSelectedFilePath(int resultCode, Intent intent) {
+//        Log.v(TAG, "parseSelectedFilePath()");
+//        Uri[] results = null;
+//        if (resultCode == RESULT_OK && intent != null) {
+//            Log.v(TAG, "PythonActivity is running parseSelectedFilePath for " + intent.getData());
+//            results  = new Uri[1];
+//            try {
+//                String full_path = getImagePath(intent.getData());
+//                String encoded_path = URLEncoder.encode(full_path, "UTF-8");
+//                File fake_file = new File("file:///" + encoded_path);
+//                results[0] = Uri.fromFile(fake_file);
+//                Log.v(TAG, "PythonActivity parseSelectedFilePath : " + results[0].toString());
+//            } catch (UnsupportedEncodingException exc) {
+//                Log.e(TAG, "PythonActivity parseSelectedFilePath error encoding file path");
+//            }
+//        }
+//        else {
+//            Log.v(TAG, "PythonActivity is running parseSelectedFilePath return EMPTY LIST: resultCode=" + resultCode + " intent=" + intent);
+//        }
+//        mUploadMessage.onReceiveValue(results);
+//        mUploadMessage = null;
+//    }
 
 
     public class MyWebChromeClient extends WebChromeClient {
 
-        public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> filePath, WebChromeClient.FileChooserParams fileChooserParams) {
-            Log.v(TAG, "onShowFileChooser()");
-            if (mUploadMessage != null) {
-                Log.v(TAG, "PythonActivity mUploadMessage is not empty");
-                mUploadMessage.onReceiveValue(null);
-            }
-            mUploadMessage = filePath;
-            Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            contentSelectionIntent.setType("*/*");
-            contentSelectionIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-            Intent[] intentArray;
-            intentArray = new Intent[0];
-            Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
-            chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
-            chooserIntent.putExtra(Intent.EXTRA_TITLE, "Select file to upload");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
-            //startActivityForResult(Intent.createChooser(chooserIntent, "Select file"), INPUT_FILE_REQUEST_CODE);
-            startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE);
-            return true;
-        }
+//        public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> filePath, WebChromeClient.FileChooserParams fileChooserParams) {
+//            Log.v(TAG, "onShowFileChooser()");
+//            if (mUploadMessage != null) {
+//                Log.v(TAG, "PythonActivity mUploadMessage is not empty");
+//                mUploadMessage.onReceiveValue(null);
+//            }
+//            mUploadMessage = filePath;
+//            Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//            contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+//            contentSelectionIntent.setType("*/*");
+//            contentSelectionIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+//            Intent[] intentArray;
+//            intentArray = new Intent[0];
+//            Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+//            chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+//            chooserIntent.putExtra(Intent.EXTRA_TITLE, "Select file to upload");
+//            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+//            //startActivityForResult(Intent.createChooser(chooserIntent, "Select file"), INPUT_FILE_REQUEST_CODE);
+//            startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE);
+//            return true;
+//        }
 
         @Override
         public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
@@ -206,66 +211,6 @@ public class BitDustActivity extends PythonActivity {
         }
         f.delete();
     }
-
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-//        Log.v(TAG, "onActivityResult()");
-//        if (requestCode == INPUT_FILE_REQUEST_CODE && mUploadMessage != null) {
-//            parseSelectedFilePath(resultCode, intent);
-//            return;
-//        }
-//        super.onActivityResult(requestCode, resultCode, intent);
-//        return;
-//    }
-
-
-//    @Override
-//    protected void onDestroy() {
-//        Log.v(TAG, "onDestroy()");
-//        String process_stop_result = requestGetURL("http://localhost:8180/process/stop/v1");
-//        Log.v(TAG, "onDestroy() process_stop_result : " + process_stop_result);
-//        String process_health_result = "ok";
-//        while (process_health_result != "") {
-//            process_health_result = requestGetURL("http://localhost:8180/process/health/v1");
-//            Log.v(TAG, "onDestroy() process_health_result : " + process_health_result);
-//        }
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//            if (this.webView != null) {
-//                Log.v(TAG, "onDestroy()   about to call webView.destroy()");
-//                this.webView.destroy();
-//                this.webView = null;
-//            }
-//        }
-//        Log.v(TAG, "onDestroy()   about to call super onDestroy");
-//        super.onDestroy();
-//    }
-
-
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//            if (this.webView != null) {
-//                Log.v(TAG, "onPause()   about to call webView.onPause()");
-//                this.webView.onPause();
-//                this.webView.pauseTimers();
-//            }
-//        }
-//    }
-
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//            if (this.webView != null) {
-//                Log.v(TAG, "onResume()   about to call webView.resumeTimers()");
-//                this.webView.resumeTimers();
-//                this.webView.onResume();
-//            }
-//        }
-//    }
 
 
     private class HttpRequestGET extends AsyncTask<String, Void, String> {

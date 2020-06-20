@@ -6,8 +6,8 @@ Runnable
 
 from jnius import PythonJavaClass, java_method, autoclass  # @UnresolvedImport
 
-# PythonActivity = autoclass('org.kivy.android.PythonActivity')
-PythonActivity = autoclass('org.bitdust_io.bitdust1.BitDustActivity')
+PythonActivity = autoclass('org.kivy.android.PythonActivity')
+# PythonActivity = autoclass('org.bitdust_io.bitdust1.BitDustActivity')
 
 
 class Runnable(PythonJavaClass):
