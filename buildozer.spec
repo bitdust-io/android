@@ -95,20 +95,20 @@ android.presplash_color = #81A6FF
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, FOREGROUND_SERVICE
 
 # (int) Target Android API, should be as high as possible.
-# android.api = 28
+android.api = 26
 
 # (int) Minimum API your APK will support.
-# android.minapi = 28
+android.minapi = 26
 
 # (int) Android SDK version to use
 # android.sdk = 20
 
 # (str) Android NDK version to use
 # android.ndk = 17c
-# android.ndk = 19c
+android.ndk = 19c
 
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
-# android.ndk_api = 28
+android.ndk_api = 26
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 # android.private_storage = True
