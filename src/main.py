@@ -87,8 +87,8 @@ class BitDustApp(App):
 
     def on_start(self):
         print('BitDustApp.on_start')
-        self.request_app_permissions()
-        self.create_notification_channel()
+        # self.request_app_permissions()
+        # self.create_notification_channel()
         self.start_service()
 
     def on_stop(self):
