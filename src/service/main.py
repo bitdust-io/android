@@ -25,8 +25,8 @@ import encodings.idna
 PACKAGE_NAME = 'org.bitdust_io.bitdust1'
 # SERVICE_STARTED_MARKER_FILENAME = f'/data/user/0/{PACKAGE_NAME}/local_web_server'
 
-PythonActivity = autoclass('org.kivy.android.PythonActivity')
-# PythonActivity = autoclass('org.bitdust_io.bitdust1.BitDustActivity')
+# PythonActivity = autoclass('org.kivy.android.PythonActivity')
+PythonActivity = autoclass('org.bitdust_io.bitdust1.BitDustActivity')
 
 
 def set_foreground():

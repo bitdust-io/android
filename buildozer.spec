@@ -134,7 +134,7 @@ android.ndk_api = 26
 android.accept_sdk_license = True
 
 # (str) Android entry point, default is ok for Kivy-based app
-#android.entrypoint = org.renpy.android.PythonActivity
+android.entrypoint = org.bitdust_io.bitdust1.BitDustActivity
 
 # (list) Pattern to whitelist for the whole project
 #android.whitelist =
@@ -166,7 +166,7 @@ android.add_src = java_classes/
 #android.gradle_dependencies =
 
 # (list) Java classes to add as activities to the manifest.
-#android.add_activites = com.example.ExampleActivity
+android.add_activites = org.bitdust_io.bitdust1.BitDustActivity
 
 # (str) OUYA Console category. Should be one of GAME or APP
 # If you leave this blank, OUYA support will not be enabled
