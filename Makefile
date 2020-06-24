@@ -45,12 +45,12 @@ install_dependencies_macos:
 
 install_buildozer_global:
 	@rm -rf buildozer/
-	@git clone https://github.com/kivy/buildozer
+	@git clone https://github.com/vesellov/buildozer
 	@cd buildozer/; python3 setup.py build; sudo pip3 install -e .; cd ..;
 
 install_buildozer:
 	@rm -rf buildozer/
-	@git clone https://github.com/kivy/buildozer
+	@git clone https://github.com/vesellov/buildozer
 	@python3 -m virtualenv venv
 	@cd buildozer/; ../venv/bin/python setup.py build; ../venv/bin/pip install -e .; cd ..;
 
