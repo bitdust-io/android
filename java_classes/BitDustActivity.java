@@ -77,19 +77,29 @@ public class BitDustActivity extends PythonActivity {
 
     private static final String TAG = "BitDustActivity";
 
+    public static BitDustActivity mActivity = null;
+    public static BitDustActivity mCustomActivity = null;
+
     private static boolean appliedWindowedModeHack = false;
     private static final int INPUT_FILE_REQUEST_CODE = 10001;
     public WebView webView = null;
     private WebSettings webSettings = null;
     private ValueCallback<Uri[]> mUploadMessage = null;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.mActivity = this;
+        this.mCustomActivity = this;
+        Log.v(TAG, "onCreate() overwrote mActivity " + this.mActivity);
+    }
 
     public void createWebView() {
         Log.v(TAG, "createWebView()");
         try {
             this.webView = new WebView(this);
             webSettings = this.webView.getSettings();
-            webSettings.setJavaScriptEnabled(false);
+            webSettings.setJavaScriptEnabled(true);
             webSettings.setUseWideViewPort(true);
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setAllowFileAccess(true);

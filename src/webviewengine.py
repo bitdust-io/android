@@ -54,8 +54,8 @@ class WebviewEngine(Widget, EventDispatcher):
             return True
 
         try:
-            PythonActivity.mActivity.createWebView()
-            self._webview_obj = PythonActivity.mActivity.webView
+            PythonActivity.mCustomActivity.createWebView()
+            self._webview_obj = PythonActivity.mCustomActivity.webView
         except:
             import traceback
             traceback.print_exc()
@@ -73,4 +73,3 @@ class WebviewEngine(Widget, EventDispatcher):
 
         self._webview_obj.loadUrl(f'file:///data/user/0/{PACKAGE_NAME}/files/app/www/index.html')
         return True
-

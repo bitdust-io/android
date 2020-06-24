@@ -135,6 +135,7 @@ android.accept_sdk_license = True
 
 # (str) Android entry point, default is ok for Kivy-based app
 android.entrypoint = org.bitdust_io.bitdust1.BitDustActivity
+android.activity_class_name = org.bitdust_io.bitdust1.BitDustActivity
 
 # (list) Pattern to whitelist for the whole project
 #android.whitelist =

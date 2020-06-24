@@ -58,9 +58,9 @@ install_p4a:
 	@rm -rf python-for-android/
 	#@git clone --single-branch --branch master https://github.com/kivy/python-for-android.git
 	@git clone --single-branch --branch master https://github.com/vesellov/python-for-android.git
-	# @cp -r -v etc/AndroidManifest.tmpl.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/templates/
-	# @mkdir -p ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/res/xml/
-	# @cp -r -v etc/res/xml/network_security_config.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/res/xml/
+	@cp -r -v etc/AndroidManifest.tmpl.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/templates/
+	@mkdir -p ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/res/xml/
+	@cp -r -v etc/res/xml/network_security_config.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/res/xml/
 	# @cp -r etc/PythonActivity.java ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/java/org/kivy/android/
 
 update_engine_repo:
@@ -72,18 +72,22 @@ update_ui_repo:
 update_p4a_repo:
 	@cd ./python-for-android; git fetch --all; git reset --hard origin/master; cd ..;
 
+clean_build:
+	@VIRTUAL_ENV=1 ./venv/bin/buildozer -v android clean
+
 clean:
 	@rm -rf .build_incremental
 	@rm -rf .release_incremental
 	@rm -rf .buildozer
 
-# rewrite_dist_files:
+rewrite_dist_files:
+	@cp -r -v etc/res/xml/network_security_config.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/src/main/res/xml/
+	@cp -r -v etc/AndroidManifest.tmpl.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/templates/
 	# @cp -r -v etc/PythonActivity.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/kivy/android/
 	# @cp -r -v etc/PythonService.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/kivy/android/
 	# @cp -r -v etc/SDLActivity.java ./.buildozer/android/platform/build-arm64-v8a/dists/bitdust1__arm64-v8a/src/main/java/org/libsdl/app/
-	# @cp -r -v etc/AndroidManifest.tmpl.xml ./python-for-android/pythonforandroid/bootstraps/sdl2/build/templates/
 
-refresh_environment: update_p4a_repo update_ui_repo update_engine_repo
+refresh_environment: update_p4a_repo update_ui_repo update_engine_repo rewrite_dist_files
 
 .build_incremental:
 	@python3 -c "import os, re; s = re.sub('(requirements = .+?python3)','# \g<1>',open('buildozer.spec','r').read()); open('buildozer.spec','w').write(s);"
