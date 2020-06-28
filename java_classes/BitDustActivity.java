@@ -110,7 +110,7 @@ public class BitDustActivity extends PythonActivity {
             webSettings.setBuiltInZoomControls(false);
             webSettings.setAppCacheEnabled(false);
             this.webView.setWebContentsDebuggingEnabled(true);
-            this.webView.setWebViewClient(new WebViewClient());
+            this.webView.setWebViewClient(new MyWebViewClient());
             this.webView.setWebChromeClient(new MyWebChromeClient());
             this.webView.requestFocus(View.FOCUS_DOWN);
             //if SDK version is greater of 19 then activate hardware acceleration otherwise activate software acceleration
@@ -205,8 +205,23 @@ public class BitDustActivity extends PythonActivity {
 
     public class MyWebViewClient extends WebViewClient {
 
+//        @Override
+//        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//            Log.v("MyWebViewClient", "shouldOverrideUrlLoading " + url);
+//            view.loadUrl(url);
+//            return true;
+//        }
+
     }
 
+//    @Override
+//    public void onBackPressed() {
+//        if(this.webView != null && this.webView.canGoBack()) {
+//            this.webView.goBack(); // if there is previous page open it
+//        } else {
+//            super.onBackPressed(); //if there is no previous page, close app
+//        }
+//    }
 
     public void recursiveDelete(File f) {
         if (f.isDirectory()) {

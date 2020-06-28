@@ -41,8 +41,8 @@ def set_foreground():
     NotificationChannel = autoclass(u'android.app.NotificationChannel')
     notification_channel = NotificationChannel(channel_id, AndroidString('BitDust Channel'.encode('utf-8')), NotificationManager.IMPORTANCE_HIGH)
     Notification = autoclass(u'android.app.Notification')
-    service = autoclass('org.kivy.android.PythonService').mService
-    # service = autoclass('org.bitdust_io.bitdust1.BitDustService').mService
+    # service = autoclass('org.kivy.android.PythonService').mService
+    service = autoclass('org.bitdust_io.bitdust1.BitDustService').mService
     notification_service = service.getSystemService(Context.NOTIFICATION_SERVICE)
     notification_service.createNotificationChannel(notification_channel)
     app_context = service.getApplication().getApplicationContext()
