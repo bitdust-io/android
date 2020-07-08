@@ -181,6 +181,8 @@ android.add_activites = org.bitdust_io.bitdust1.BitDustActivity
 
 # (str) launchMode to set for the main activity
 android.manifest.launch_mode = singleTask
+android.manifest.network_security_config = "@xml/network_security_config"
+android.manifest.uses_cleartext_traffic = True
 
 # (list) Android additional libraries to copy into libs/armeabi
 #android.add_libs_armeabi = libs/android/*.so
