@@ -72,10 +72,10 @@ update_ui_repo:
 update_p4a_repo:
 	@cd ./python-for-android; git fetch --all; git reset --hard origin/master; cd ..;
 
-clean_build:
+clean:
 	@VIRTUAL_ENV=1 ./venv/bin/buildozer -v android clean
 
-clean:
+clean_full:
 	@rm -rf .build_incremental
 	@rm -rf .release_incremental
 	@rm -rf .buildozer
