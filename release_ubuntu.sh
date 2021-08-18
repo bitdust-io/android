@@ -7,15 +7,12 @@
 #
 # to be able to publish on Android Play Market need to first prepare the keystore file and send it Google:
 # java -jar pepk.jar --keystore=~/keystores/bitdust.keystore --alias=bitdust --output=output.zip --encryptionkey=xxx --include-cert
-#
 
 set -e
 
 rm -rf buildozer.spec.bk
 
 cp -v buildozer.spec buildozer.spec.bk
-
-# sed -i "s/^version = [0-9]*.[0-9]*.[0-9]*$/version = $1/g" buildozer.spec
 
 echo "__version__ = \"$1\"" > src/version.py
 
