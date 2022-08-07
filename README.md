@@ -1,3 +1,9 @@
+# DEPRECATED
+
+This project is deprecated, work continues in this repository: [BitDust p2p-app](https://github.com/bitdust-io/p2p-app)
+
+
+
 # BitDust for Android
 
 This repo contains all required scripts and configs to build BitDust application for Android Platform.
