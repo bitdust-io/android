@@ -25,8 +25,8 @@ import encodings.idna
 PACKAGE_NAME = 'org.bitdust_io.bitdust1'
 # SERVICE_STARTED_MARKER_FILENAME = f'/data/user/0/{PACKAGE_NAME}/local_web_server'
 
-# BitDustActivity = autoclass('org.bitdust_io.bitdust.BitDustActivity')
-PythonActivity = autoclass('org.kivy.android.PythonActivity')
+# PythonActivity = autoclass('org.kivy.android.PythonActivity')
+PythonActivity = autoclass('org.bitdust_io.bitdust1.BitDustActivity')
 
 
 def set_foreground():
@@ -41,7 +41,8 @@ def set_foreground():
     NotificationChannel = autoclass(u'android.app.NotificationChannel')
     notification_channel = NotificationChannel(channel_id, AndroidString('BitDust Channel'.encode('utf-8')), NotificationManager.IMPORTANCE_HIGH)
     Notification = autoclass(u'android.app.Notification')
-    service = autoclass('org.kivy.android.PythonService').mService
+    # service = autoclass('org.kivy.android.PythonService').mService
+    service = autoclass('org.bitdust_io.bitdust1.BitDustService').mService
     notification_service = service.getSystemService(Context.NOTIFICATION_SERVICE)
     notification_service.createNotificationChannel(notification_channel)
     app_context = service.getApplication().getApplicationContext()
@@ -114,6 +115,7 @@ def start_web_server(web_port_number=8888):
 
 
 def run_service():
+    print('run_service()')
     argument = os.environ.get('PYTHON_SERVICE_ARGUMENT', 'null')
     argument = json.loads(argument) if argument else None
     argument = {} if argument is None else argument
@@ -129,7 +131,7 @@ def run_service():
 
         # reactor.callWhenRunning(start_web_server)  # @UndefinedVariable
         reactor.callWhenRunning(start_bitdust)  # @UndefinedVariable
-        reactor.run()  # @UndefinedVariable
+        reactor.run(installSignalHandlers=False)  # @UndefinedVariable
 
         print('run_service() Twisted reactor stopped')
 

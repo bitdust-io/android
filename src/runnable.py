@@ -6,8 +6,8 @@ Runnable
 
 from jnius import PythonJavaClass, java_method, autoclass  # @UnresolvedImport
 
-PythonActivity = autoclass('org.kivy.android.PythonActivity')
-# BitDustActivity = autoclass('org.bitdust_io.bitdust.BitDustActivity')
+# PythonActivity = autoclass('org.kivy.android.PythonActivity')
+PythonActivity = autoclass('org.bitdust_io.bitdust1.BitDustActivity')
 
 
 class Runnable(PythonJavaClass):
@@ -37,6 +37,7 @@ class Runnable(PythonJavaClass):
             import traceback
             traceback.print_exc()
         Runnable.__runnables__.remove(self)
+
 
 def run_on_ui_thread(f):
     '''Decorator to create automatically a :class:`Runnable` object with the

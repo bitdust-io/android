@@ -28,16 +28,16 @@ source.exclude_dirs = etc,src/bitdust/.git,src/bitdust/icons,src/bitdust/release
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 1.0.2
+# version = 1.0.2
 
 # (str) Application versioning (method 2)
-# version.regex = __version__ = ['"](.*)['"]
-# version.filename = %(source.dir)s/main.py
+version.regex = __version__ = ['"](.*)['"]
+version.filename = %(source.dir)s/version.py
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy,
-requirements = kivy,service_identity,pyparsing,appdirs,cffi,six,pycryptodome,attrs,hyperlink,idna,cryptography,automat,android,twisted==19.7.0,python3
-# requirements = incremental,kivy
+# requirements = kivy,service_identity,pyparsing,appdirs,cffi,six,pycryptodome,attrs,hyperlink,idna,cryptography,automat,android,twisted==20.3.0,python3
+requirements = incremental,kivy
 # there is an issue with incremental/twisted build... first you need to build only incremental and then twisted in second run
 
 
@@ -71,11 +71,15 @@ services = Bitdustnode:./service/main.py
 osx.python_version = 3
 
 # Kivy version to use
-osx.kivy_version = 1.11.0
+osx.kivy_version = 1.11.1
 
 #
 # Android specific
 #
+
+# (str) Android app theme, default is ok for Kivy-based app
+android.apptheme = "@android:style/Theme.Black.NoTitleBar"
+# android.apptheme = "@android:style/Theme.NoTitleBar"
 
 # (bool) Indicate if the application should be fullscreen or not
 fullscreen = 0
@@ -91,20 +95,20 @@ android.presplash_color = #81A6FF
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, FOREGROUND_SERVICE
 
 # (int) Target Android API, should be as high as possible.
-android.api = 28
+android.api = 26
 
 # (int) Minimum API your APK will support.
-# android.minapi = 28
+android.minapi = 26
 
 # (int) Android SDK version to use
 # android.sdk = 20
 
 # (str) Android NDK version to use
 # android.ndk = 17c
-android.ndk = 19b
+android.ndk = 19c
 
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
-# android.ndk_api = 21
+android.ndk_api = 26
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 # android.private_storage = True
@@ -130,7 +134,9 @@ android.ndk = 19b
 android.accept_sdk_license = True
 
 # (str) Android entry point, default is ok for Kivy-based app
-#android.entrypoint = org.renpy.android.PythonActivity
+android.entrypoint = org.bitdust_io.bitdust1.BitDustActivity
+android.activity_class_name = org.bitdust_io.bitdust1.BitDustActivity
+android.service_class_name = org.bitdust_io.bitdust1.BitDustService
 
 # (list) Pattern to whitelist for the whole project
 #android.whitelist =
@@ -149,7 +155,7 @@ android.accept_sdk_license = True
 
 # (list) List of Java files to add to the android project (can be java or a
 # directory containing the files)
-android.add_src = java_classes/*.java
+android.add_src = java_classes/
 
 # (list) Android AAR archives to add (currently works only with sdl2_gradle
 # bootstrap)
@@ -162,7 +168,7 @@ android.add_src = java_classes/*.java
 #android.gradle_dependencies =
 
 # (list) Java classes to add as activities to the manifest.
-#android.add_activites = com.example.ExampleActivity
+android.add_activites = org.bitdust_io.bitdust1.BitDustActivity
 
 # (str) OUYA Console category. Should be one of GAME or APP
 # If you leave this blank, OUYA support will not be enabled
@@ -175,7 +181,9 @@ android.add_src = java_classes/*.java
 #android.manifest.intent_filters =
 
 # (str) launchMode to set for the main activity
-#android.manifest.launch_mode = standard
+android.manifest.launch_mode = singleTask
+android.manifest.network_security_config = "@xml/network_security_config"
+android.manifest.uses_cleartext_traffic = True
 
 # (list) Android additional libraries to copy into libs/armeabi
 #android.add_libs_armeabi = libs/android/*.so
@@ -217,7 +225,7 @@ android.arch = arm64-v8a
 #p4a.fork = kivy
 
 # (str) python-for-android branch to use, defaults to master
-p4a.branch = develop
+p4a.branch = master
 # master
 # v2019.08.09
 

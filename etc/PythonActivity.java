@@ -103,28 +103,34 @@ public class PythonActivity extends SDLActivity {
 
     public void createWebView() {
         Log.v(TAG, "createWebView()");
-        this.webView = new WebView(this);
-        webSettings = this.webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setUseWideViewPort(true);
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setAllowFileAccess(true);
-        webSettings.setAllowContentAccess(true);
-        webSettings.setAllowFileAccessFromFileURLs(true);
-        webSettings.setAllowUniversalAccessFromFileURLs(true);
-        webSettings.setSupportZoom(false);
-        webSettings.setBuiltInZoomControls(false);
-        webSettings.setAppCacheEnabled(false);
-        this.webView.setWebContentsDebuggingEnabled(true);
-        this.webView.setWebViewClient(new WebViewClient());
-        this.webView.setWebChromeClient(new MyWebChromeClient());
-        //if SDK version is greater of 19 then activate hardware acceleration otherwise activate software acceleration
-        if (Build.VERSION.SDK_INT >= 19) {
-            this.webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        } else if (Build.VERSION.SDK_INT >= 11 && Build.VERSION.SDK_INT < 19) {
-            this.webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        try {
+            this.webView = new WebView(this);
+            webSettings = this.webView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setUseWideViewPort(true);
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setAllowFileAccess(true);
+            webSettings.setAllowContentAccess(true);
+            webSettings.setAllowFileAccessFromFileURLs(true);
+            webSettings.setAllowUniversalAccessFromFileURLs(true);
+            webSettings.setSupportZoom(false);
+            webSettings.setBuiltInZoomControls(false);
+            webSettings.setAppCacheEnabled(false);
+            this.webView.setWebContentsDebuggingEnabled(true);
+            this.webView.setWebViewClient(new WebViewClient());
+            this.webView.setWebChromeClient(new MyWebChromeClient());
+            // this.webView.requestFocus(View.FOCUS_DOWN);
+            //if SDK version is greater of 19 then activate hardware acceleration otherwise activate software acceleration
+            if (Build.VERSION.SDK_INT >= 19) {
+                this.webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            } else if (Build.VERSION.SDK_INT >= 11 && Build.VERSION.SDK_INT < 19) {
+                this.webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }
+            this.addContentView(this.webView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            Log.v(TAG, "createWebView() ok");
+        } catch (Exception exc) {
+            Log.e(TAG, "Failed creating WebView: " + exc);
         }
-        this.addContentView(this.webView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
     public String getAppRoot() {
